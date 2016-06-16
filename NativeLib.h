@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#ifndef M2_NATIVE_API
-#define M2_NATIVE_API
+#ifndef NATIVELIB
+#define NATIVELIB
 
 #pragma comment(lib,"ntdll.lib")
 
