@@ -1,22 +1,40 @@
 ﻿/**************************************************************************
-描述：窗口站管理调用及其数据结构定义（包括方便调用本机API的内联函数）
+描述：窗口站管理调用及其数据结构定义
 维护者：Mouri_Naruto
-版本：1.0 (2016-06-26)
+版本：1.1 (2016-07-05)
 基于项目：Process Hacker的phnt库
 协议：无（致敬Process Hacker作者）
-用法：直接Include此头文件即可(前提你要在这之前Include Windows.h)
+用法：直接Include此头文件即可
 建议的Windows SDK版本：10.0.10586及以后
 ***************************************************************************/
 
+#ifndef WINSTAAPI
+#define WINSTAAPI
+
+#if _MSC_VER > 1000
 #pragma once
+#endif
 
-#ifndef WINSTATIONLIB
-#define WINSTATIONLIB
+// Windows 头文件
+#include <windows.h>
 
+// SDK 版本定义
+#include <SDKDDKVer.h>
+
+// winsta.lib
 #pragma comment(lib,"winsta.lib")
 
+// 为编译通过而禁用的警告
+#if _MSC_VER >= 1200
+#pragma warning(push)
+#pragma warning(disable:4820) // 字节填充添加在数据成员后(等级 4)
+#endif
+
+#ifdef __cplusplus
 extern "C"
 {
+#endif
+
 	// begin_msdn:http://msdn.microsoft.com/en-us/library/cc248779%28PROT.10%29.aspx
 
 	// Access rights
@@ -705,6 +723,12 @@ extern "C"
 	);
 
 	// end_msdn
+#ifdef __cplusplus
 }
+#endif
+
+#if _MSC_VER >= 1200
+#pragma warning(pop)
+#endif
 
 #endif // !M2_WINSTATION
