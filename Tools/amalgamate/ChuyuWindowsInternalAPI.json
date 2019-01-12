@@ -1,0 +1,9 @@
+{
+  "project": "ChuyuWindowsInternalAPI",
+  "target": "ChuyuWindowsInternalAPI.h",
+  "sources": [
+    "phnt_windows.h",
+    "phnt.h"
+  ],
+  "include_paths": [ "." ]
+}
