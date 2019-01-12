@@ -8,10 +8,14 @@ on a modified fork of https://github.com/processhacker/phnt, you can browse our
 fork from https://github.com/Chuyu-Team/phnt.
 
 ## The difference from https://github.com/processhacker/phnt
+- Single File.
 - No kernel mode definitions.
 - Compiling using the `/W4 /WX` option is supported.
 - No private definition from the https://github.com/processhacker/phnt.
 - Optimized for the Windows SDK.
+
+## How to use
+Copy ChuyuWindowsInternalAPI.h to your project and directly include it.
 
 ## License
 Because https://github.com/processhacker/phnt is distributed under the 
