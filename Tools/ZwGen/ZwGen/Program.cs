@@ -8,7 +8,7 @@ namespace ZwGen
     {
         static void Main(string[] args)
         {
-            string currentFilePath = "G:\\Projects\\ChuyuWindowsInternalAPI\\Tools\\ChuyuWindowsInternalAPI.h";
+            string currentFilePath = "G:\\Projects\\ChuyuWindowsInternalAPI\\Tools\\amalgamate\\ChuyuWindowsInternalAPI.h";
 
             string text = File.ReadAllText(currentFilePath);
 

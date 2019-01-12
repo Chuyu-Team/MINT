@@ -21,31 +21,74 @@
 
 // This header file provides access to Win32, plus NTSTATUS values and some access mask values.
 
-#ifndef CINTERFACE
-#define CINTERFACE
-#endif
-
-#ifndef COBJMACROS
-#define COBJMACROS
-#endif
-
-#ifndef INITGUID
-#define INITGUID
-#endif
-
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
-#ifndef WIN32_NO_STATUS
-#define WIN32_NO_STATUS
-#endif
-
 #include <windows.h>
 #include <windowsx.h>
-#undef WIN32_NO_STATUS
-#include <ntstatus.h>
 #include <winioctl.h>
+
+#undef STATUS_WAIT_0
+#undef STATUS_ABANDONED_WAIT_0
+#undef STATUS_USER_APC
+#undef STATUS_TIMEOUT
+#undef STATUS_PENDING
+#undef DBG_EXCEPTION_HANDLED
+#undef DBG_CONTINUE
+#undef STATUS_SEGMENT_NOTIFICATION
+#undef STATUS_FATAL_APP_EXIT
+#undef DBG_TERMINATE_THREAD
+#undef DBG_TERMINATE_PROCESS
+#undef DBG_CONTROL_C
+#undef DBG_PRINTEXCEPTION_C
+#undef DBG_RIPEXCEPTION
+#undef DBG_CONTROL_BREAK
+#undef DBG_COMMAND_EXCEPTION
+#undef STATUS_GUARD_PAGE_VIOLATION
+#undef STATUS_DATATYPE_MISALIGNMENT
+#undef STATUS_BREAKPOINT
+#undef STATUS_SINGLE_STEP
+#undef STATUS_LONGJUMP
+#undef STATUS_UNWIND_CONSOLIDATE
+#undef DBG_EXCEPTION_NOT_HANDLED
+#undef STATUS_ACCESS_VIOLATION
+#undef STATUS_IN_PAGE_ERROR
+#undef STATUS_INVALID_HANDLE
+#undef STATUS_INVALID_PARAMETER
+#undef STATUS_NO_MEMORY
+#undef STATUS_ILLEGAL_INSTRUCTION
+#undef STATUS_NONCONTINUABLE_EXCEPTION
+#undef STATUS_INVALID_DISPOSITION
+#undef STATUS_ARRAY_BOUNDS_EXCEEDED
+#undef STATUS_FLOAT_DENORMAL_OPERAND
+#undef STATUS_FLOAT_DIVIDE_BY_ZERO
+#undef STATUS_FLOAT_INEXACT_RESULT
+#undef STATUS_FLOAT_INVALID_OPERATION
+#undef STATUS_FLOAT_OVERFLOW
+#undef STATUS_FLOAT_STACK_CHECK
+#undef STATUS_FLOAT_UNDERFLOW
+#undef STATUS_INTEGER_DIVIDE_BY_ZERO
+#undef STATUS_INTEGER_OVERFLOW
+#undef STATUS_PRIVILEGED_INSTRUCTION
+#undef STATUS_STACK_OVERFLOW
+#undef STATUS_DLL_NOT_FOUND
+#undef STATUS_ORDINAL_NOT_FOUND
+#undef STATUS_ENTRYPOINT_NOT_FOUND
+#undef STATUS_CONTROL_C_EXIT
+#undef STATUS_DLL_INIT_FAILED
+#undef STATUS_FLOAT_MULTIPLE_FAULTS
+#undef STATUS_FLOAT_MULTIPLE_TRAPS
+#undef STATUS_REG_NAT_CONSUMPTION
+#undef STATUS_HEAP_CORRUPTION
+#undef STATUS_STACK_BUFFER_OVERRUN
+#undef STATUS_INVALID_CRUNTIME_PARAMETER
+#undef STATUS_ASSERTION_FAILURE
+#undef STATUS_ENCLAVE_VIOLATION 
+
+#undef STATUS_SXS_EARLY_DEACTIVATION
+#undef STATUS_SXS_INVALID_DEACTIVATION
+
+#undef DBG_REPLY_LATER
+#undef DBG_PRINTEXCEPTION_WIDE_C
+
+#include <ntstatus.h>
 
 typedef double DOUBLE;
 typedef GUID *PGUID;
@@ -110,6 +153,18 @@ typedef GUID *PGUID;
 #pragma comment(lib,"ntdll.lib")
 #pragma comment(lib,"samlib.lib")
 #pragma comment(lib,"winsta.lib")
+
+// Warnings which disabled for compiling
+#if _MSC_VER >= 1200
+#pragma warning(push)
+// nonstandard extension used : nameless struct/union
+#pragma warning(disable:4201)
+// 'struct_name' : structure was padded due to __declspec(align())
+#pragma warning(disable:4324)
+// 'enumeration': a forward declaration of an unscoped enumeration must have an
+// underlying type (int assumed)
+#pragma warning(disable:4471)
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -30995,3 +31050,8 @@ _WinStationWaitForConnect(
 #ifdef __cplusplus
 }
 #endif
+
+#if _MSC_VER >= 1200
+#pragma warning(pop)
+#endif
+
