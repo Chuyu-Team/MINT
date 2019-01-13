@@ -19,6 +19,9 @@
  * not in any way that suggests the licensor endorses you or your use.
  */
 
+#ifndef _CHUYU_WINDOWS_INTERNAL_API_
+#define _CHUYU_WINDOWS_INTERNAL_API_
+
 // This header file provides access to Win32, plus NTSTATUS values and some access mask values.
 
 #include <windows.h>
@@ -31055,3 +31058,4 @@ _WinStationWaitForConnect(
 #pragma warning(pop)
 #endif
 
+#endif // !_CHUYU_WINDOWS_INTERNAL_API_
