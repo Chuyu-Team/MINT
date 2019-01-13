@@ -13,6 +13,7 @@ fork from https://github.com/Chuyu-Team/phnt.
 - Compiling using the `/W4 /WX` option is supported.
 - No private definition from the https://github.com/processhacker/phnt.
 - Optimized for the Windows SDK.
+- "Zw*" API is under the management of Windows SDK version macros.
 
 ## How to use
 Copy ChuyuWindowsInternalAPI.h to your project and directly include it.
