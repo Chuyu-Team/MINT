@@ -132,6 +132,7 @@ typedef GUID *PGUID;
     (WMIGUID_EXECUTE | TRACELOG_GUID_ENABLE | TRACELOG_LOG_EVENT | \
     TRACELOG_ACCESS_REALTIME | TRACELOG_REGISTER_GUIDS | \
     STANDARD_RIGHTS_EXECUTE)
+ 
 // This header file provides access to NT APIs.
 
 // Definitions are annotated to indicate their source. If a definition is not annotated, it has been
@@ -477,6 +478,7 @@ typedef struct _KSYSTEM_TIME
 #include <poppack.h>
 
 #endif
+ 
 
 // #include <ntnls.h>
 #define MAXIMUM_LEADBYTES 12
@@ -508,6 +510,7 @@ typedef struct _NLSTABLEINFO
 NTSYSAPI USHORT NlsAnsiCodePage;
 NTSYSAPI BOOLEAN NlsMbCodePageTag;
 NTSYSAPI BOOLEAN NlsMbOemCodePageTag;
+ 
 
 // #include <ntkeapi.h>
 #define LOW_PRIORITY 0 // Lowest thread priority level
@@ -700,6 +703,7 @@ NTAPI
 ZwYieldExecution(
     VOID
     );
+ 
 
 
 // #include <ntldr.h>
@@ -1611,6 +1615,7 @@ NTAPI
 LdrControlFlowGuardEnforced(
     VOID
     );
+ 
 
 // #include <ntexapi.h>
 // #include <ntkeapi.h>
@@ -6797,6 +6802,7 @@ ZwDrawText(
     _In_ PUNICODE_STRING Text
     );
 #endif
+ 
 
 
 // #include <ntgdi.h>
@@ -6916,6 +6922,7 @@ typedef struct _GDI_SHARED_MEMORY
 {
     GDI_HANDLE_ENTRY Handles[GDI_MAX_HANDLE_COUNT];
 } GDI_SHARED_MEMORY, *PGDI_SHARED_MEMORY;
+ 
 
 
 // #include <ntmmapi.h>
@@ -8022,6 +8029,7 @@ NTAPI
 ZwFlushWriteBuffer(
     VOID
     );
+ 
 
 // #include <ntobapi.h>
 #define OBJECT_TYPE_CREATE 0x0001
@@ -8581,6 +8589,7 @@ ZwQuerySymbolicLinkObject(
     _Inout_ PUNICODE_STRING LinkTarget,
     _Out_opt_ PULONG ReturnedLength
     );
+ 
 
 // #include <ntpsapi.h>
 #ifndef PROCESS_SET_PORT
@@ -9043,6 +9052,7 @@ typedef struct _TEB
     ULONGLONG ReservedForCrt;
     GUID EffectiveContainerId;
 } TEB, *PTEB;
+ 
 
 
 // source:http://www.microsoft.com/whdc/system/Sysinternals/MoreThan64proc.mspx
@@ -11296,6 +11306,7 @@ ZwAllocateReserveObject(
     _In_ MEMORY_RESERVE_TYPE Type
     );
 #endif
+ 
 
 
 #include <cfg.h>
@@ -11717,6 +11728,7 @@ EtwEventRegister(
     _In_opt_ PVOID CallbackContext,
     _Out_ PREGHANDLE RegHandle
     );
+ 
 
 // #include <ntioapi.h>
 // Create disposition
@@ -14051,6 +14063,7 @@ typedef struct _FILE_MAILSLOT_PEEK_BUFFER
     ULONG NumberOfMessages;
     ULONG MessageLength;
 } FILE_MAILSLOT_PEEK_BUFFER, *PFILE_MAILSLOT_PEEK_BUFFER;
+ 
 
 // #include <ntlpcapi.h>
 // Local Inter-process Communication
@@ -15467,6 +15480,7 @@ AlpcGetCompletionListMessageAttributes(
 #endif
 
 // end_private
+ 
 
 // #include <ntpfapi.h>
 // begin_private
@@ -15725,6 +15739,7 @@ typedef struct _SUPERFETCH_INFORMATION
 } SUPERFETCH_INFORMATION, *PSUPERFETCH_INFORMATION;
 
 // end_private
+ 
 
 // #include <ntpnpapi.h>
 typedef enum _PLUGPLAY_EVENT_CATEGORY
@@ -15930,6 +15945,7 @@ ZwReplacePartitionUnit(
     _In_ ULONG Flags
     );
 #endif
+ 
 
 // #include <ntpoapi.h>
 typedef union _POWER_STATE
@@ -16169,6 +16185,7 @@ NTAPI
 ZwIsSystemResumeAutomatic(
     VOID
     );
+ 
 
 // #include <ntregapi.h>
 // Boot condition flags (NtInitializeRegistry)
@@ -17198,6 +17215,7 @@ ZwThawRegistry(
     VOID
     );
 #endif
+ 
 
 // #include <ntrtl.h>
 #define RtlOffsetToPointer(Base, Offset) ((PCHAR)(((PCHAR)(Base)) + ((ULONG_PTR)(Offset))))
@@ -25043,6 +25061,7 @@ RtlFlushSecureMemoryCache(
     _In_ PVOID MemoryCache,
     _In_opt_ SIZE_T MemoryLength
     );
+ 
 
 
 // #include <ntseapi.h>
@@ -26117,6 +26136,7 @@ ZwPrivilegedServiceAuditAlarm(
     _In_ PPRIVILEGE_SET Privileges,
     _In_ BOOLEAN AccessGranted
     );
+ 
 
 // #include <nttmapi.h>
 #if (NTDDI_VERSION >= NTDDI_VISTA)
@@ -26974,6 +26994,7 @@ ZwThawTransactions(
     VOID
     );
 #endif
+ 
 
 // #include <nttp.h>
 // Some types are already defined in winnt.h.
@@ -27401,6 +27422,7 @@ TpCheckTerminateWorker(
     );
 
 #endif
+ 
 
 // #include <ntxcapi.h>
 NTSYSAPI
@@ -27479,6 +27501,7 @@ RtlAssert(
     ((!(_exp)) ? (DbgPrint("%s(%d): Soft assertion failed\n   Expression: %s\n", __FILE__, __LINE__, #_exp), FALSE) : TRUE)
 #define RTL_SOFT_ASSERTMSG(_msg, _exp) \
     ((!(_exp)) ? (DbgPrint("%s(%d): Soft assertion failed\n   Expression: %s\n   Message: %s\n", __FILE__, __LINE__, #_exp, (_msg)), FALSE) : TRUE)
+ 
 
 
 // #include <ntwow64.h>
@@ -28051,6 +28074,7 @@ FORCEINLINE VOID UStrToUStr32(
     Destination->MaximumLength = Source->MaximumLength;
     Destination->Buffer = PtrToUlong(Source->Buffer);
 }
+ 
 
 
 #include <ntlsa.h>
@@ -29785,6 +29809,7 @@ SamPerformGenericOperation(
     _In_ PSAM_GENERIC_OPERATION_INPUT OperationIn,
     _Out_ PSAM_GENERIC_OPERATION_OUTPUT *OperationOut
     );
+ 
 
 
 // #include <ntmisc.h>
@@ -29878,6 +29903,7 @@ ZwTraceControl(
     _Out_ PULONG ReturnLength
     );
 #endif
+ 
 
 
 // #include <ntsmss.h>
@@ -29898,6 +29924,7 @@ RtlSendMsgToSm(
     _In_ HANDLE ApiPortHandle,
     _In_ PPORT_MESSAGE MessageData
     );
+ 
 
 
 // #include <subprocesstag.h>
@@ -29992,6 +30019,7 @@ typedef DWORD (WINAPI *PQUERY_TAG_INFORMATION)(
     _In_ TAG_INFO_LEVEL eInfoLevel,
     _Inout_ PVOID pTagInfo
     );
+ 
 
 
 // #include <winsta.h>
@@ -31048,6 +31076,7 @@ WINAPI
 _WinStationWaitForConnect(
     VOID
     );
+ 
 
 
 #ifdef __cplusplus
@@ -31057,5 +31086,7 @@ _WinStationWaitForConnect(
 #if _MSC_VER >= 1200
 #pragma warning(pop)
 #endif
+
+
 
 #endif // !_CHUYU_WINDOWS_INTERNAL_API_

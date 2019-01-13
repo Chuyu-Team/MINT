@@ -32,7 +32,10 @@ namespace ZwGen
                 }
             }
 
-            File.WriteAllText(currentFilePath, text);
+            string outputFile = File.ReadAllText(System.AppDomain.CurrentDomain.BaseDirectory + "\\FileTemplate.txt");
+            outputFile = outputFile.Replace("{FILE_CONTENT}", text);
+
+            File.WriteAllText(currentFilePath, outputFile);
         }
     }
 }
