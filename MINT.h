@@ -1,7 +1,8 @@
 /*
- * PROJECT:   ChuyuWindowsInternalAPI
- * FILE:      ChuyuWindowsInternalAPI.h
- * PURPOSE:   Definition for the Windows Internal API
+ * PROJECT:   Mouri's Internal NT API Collections (MINT)
+ * FILE:      MINT.h
+ * PURPOSE:   Definition for the Windows Internal API from ntdll.dll, 
+ *            samlib.dll and winsta.dll
  *
  * LICENSE:   Relicensed under The MIT License from The CC BY 4.0 License
  *
@@ -19,8 +20,8 @@
  * not in any way that suggests the licensor endorses you or your use.
  */
 
-#ifndef _CHUYU_WINDOWS_INTERNAL_API_
-#define _CHUYU_WINDOWS_INTERNAL_API_
+#ifndef _MINT_
+#define _MINT_
 
 // This header file provides access to Win32, plus NTSTATUS values and some access mask values.
 
@@ -31089,4 +31090,4 @@ _WinStationWaitForConnect(
 
 
 
-#endif // !_CHUYU_WINDOWS_INTERNAL_API_
+#endif // !_MINT_

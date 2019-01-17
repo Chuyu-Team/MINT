@@ -1,6 +1,6 @@
 {
-  "project": "ChuyuWindowsInternalAPI",
-  "target": "ChuyuWindowsInternalAPI.h",
+  "project": "Mouri's Internal NT API Collections (MINT)",
+  "target": "MINT.h",
   "sources": [
     "phnt_windows.h",
     "phnt.h"

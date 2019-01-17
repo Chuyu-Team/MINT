@@ -1,11 +1,13 @@
-﻿# ChuyuWindowsInternalAPI (Originally called NativeLib)
+﻿# Mouri's Internal NT API Collections (MINT)
 
 - [简体中文](自述.md)
 
-ChuyuWindowsInternalAPI contains the definitions for the Windows Internal 
-UserMode API from ntdll.dll, samlib.dll and winsta.dll. This project is based 
-on a modified fork of https://github.com/processhacker/phnt, you can browse our
-fork from https://github.com/Chuyu-Team/phnt.
+Mouri's Internal NT API Collections (MINT) was originally called NativeLib or 
+ChuyuWindowsInternalAPI. I have changed the name of this project because the 
+original name is too long. This project contains the definitions for the 
+Windows Internal UserMode API from ntdll.dll, samlib.dll and winsta.dll. This
+project is based on a modified fork of https://github.com/processhacker/phnt,
+you can browse our fork from https://github.com/Chuyu-Team/phnt.
 
 ## The difference from https://github.com/processhacker/phnt
 - Single File.
@@ -16,7 +18,7 @@ fork from https://github.com/Chuyu-Team/phnt.
 - "Zw*" API is under the management of Windows SDK version macros.
 
 ## How to use
-Copy ChuyuWindowsInternalAPI.h to your project and directly include it.
+Copy MINT.h to your project and directly include it.
 
 ## License
 Because https://github.com/processhacker/phnt is distributed under the 
