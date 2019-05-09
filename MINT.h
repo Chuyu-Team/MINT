@@ -6986,6 +6986,7 @@ typedef struct _MEMORY_REGION_INFORMATION
     };
     SIZE_T RegionSize;
     SIZE_T CommitSize;
+    ULONG_PTR PartitionId; // 19H1
 } MEMORY_REGION_INFORMATION, *PMEMORY_REGION_INFORMATION;
 
 // private 
@@ -7015,8 +7016,9 @@ typedef struct _MEMORY_WORKING_SET_EX_BLOCK
             ULONG_PTR Reserved : 3;
             ULONG_PTR SharedOriginal : 1;
             ULONG_PTR Bad : 1;
+            ULONG_PTR Win32GraphicsProtection : 4; // 19H1
 #ifdef _WIN64
-            ULONG_PTR ReservedUlong : 32;
+            ULONG_PTR ReservedUlong : 28;
 #endif
         };
         struct
@@ -7109,7 +7111,7 @@ typedef struct _MEMORY_FRAME_INFORMATION
 {
     ULONGLONG UseDescription : 4; // MMPFNUSE_*
     ULONGLONG ListDescription : 3; // MMPFNLIST_*
-    ULONGLONG Reserved0 : 1; // reserved for future expansion
+    ULONGLONG Cold : 1; // 19H1
     ULONGLONG Pinned : 1; // 1 - pinned, 0 - not pinned
     ULONGLONG DontUse : 48; // *_INFORMATION overlay
     ULONGLONG Priority : 3; // rev
@@ -7417,7 +7419,8 @@ typedef enum _VIRTUAL_MEMORY_INFORMATION_CLASS
     VmPrefetchInformation, // ULONG
     VmPagePriorityInformation,
     VmCfgCallTargetInformation, // CFG_CALL_TARGET_LIST_INFORMATION // REDSTONE2
-    VmPageDirtyStateInformation // REDSTONE3
+    VmPageDirtyStateInformation, // REDSTONE3
+    VmImageHotPatchInformation // 19H1
 } VIRTUAL_MEMORY_INFORMATION_CLASS;
 
 typedef struct _MEMORY_RANGE_ENTRY
@@ -7432,6 +7435,8 @@ typedef struct _CFG_CALL_TARGET_LIST_INFORMATION
     ULONG Reserved;
     PULONG NumberOfEntriesProcessed;
     PCFG_CALL_TARGET_INFO CallTargetInfo;
+    PVOID Section; // since REDSTONE5
+    ULONGLONG FileOffset;
 } CFG_CALL_TARGET_LIST_INFORMATION, *PCFG_CALL_TARGET_LIST_INFORMATION;
 // end_private
 
@@ -7530,6 +7535,38 @@ ZwCreateSection(
     _In_ ULONG AllocationAttributes,
     _In_opt_ HANDLE FileHandle
     );
+
+#if (NTDDI_VERSION >= NTDDI_WIN10_RS5)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCreateSectionEx(
+    _Out_ PHANDLE SectionHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_opt_ PLARGE_INTEGER MaximumSize,
+    _In_ ULONG SectionPageProtection,
+    _In_ ULONG AllocationAttributes,
+    _In_opt_ HANDLE FileHandle,
+    _In_ PMEM_EXTENDED_PARAMETER ExtendedParameters,
+    _In_ ULONG ExtendedParameterCount
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwCreateSectionEx(
+    _Out_ PHANDLE SectionHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_opt_ PLARGE_INTEGER MaximumSize,
+    _In_ ULONG SectionPageProtection,
+    _In_ ULONG AllocationAttributes,
+    _In_opt_ HANDLE FileHandle,
+    _In_ PMEM_EXTENDED_PARAMETER ExtendedParameters,
+    _In_ ULONG ExtendedParameterCount
+    );
+#endif
 
 NTSYSCALLAPI
 NTSTATUS
@@ -8615,7 +8652,7 @@ typedef ULONG GDI_HANDLE_BUFFER[GDI_HANDLE_BUFFER_SIZE];
 typedef ULONG GDI_HANDLE_BUFFER32[GDI_HANDLE_BUFFER_SIZE32];
 typedef ULONG GDI_HANDLE_BUFFER64[GDI_HANDLE_BUFFER_SIZE64];
 
-#define FLS_MAXIMUM_AVAILABLE 128
+//#define FLS_MAXIMUM_AVAILABLE 128
 #define TLS_MINIMUM_AVAILABLE 64
 #define TLS_EXPANSION_SLOTS 1024
 
@@ -8748,7 +8785,8 @@ typedef struct _PEB
             ULONG ProcessUsingFTH : 1;
             ULONG ProcessPreviouslyThrottled : 1;
             ULONG ProcessCurrentlyThrottled : 1;
-            ULONG ReservedBits0 : 25;
+            ULONG ProcessImagesHotPatched : 1; // REDSTONE5
+            ULONG ReservedBits0 : 24;
         };
     };
     union
@@ -8756,7 +8794,7 @@ typedef struct _PEB
         PVOID KernelCallbackTable;
         PVOID UserSharedInfoPtr;
     };
-    ULONG SystemReserved[1];
+    ULONG SystemReserved;
     ULONG AtlThunkSListPtr32;
     PAPI_SET_NAMESPACE ApiSetMap;
     ULONG TlsExpansionCounter;
@@ -8821,11 +8859,13 @@ typedef struct _PEB
 
     SIZE_T MinimumStackCommit;
 
-    PVOID *FlsCallback;
-    LIST_ENTRY FlsListHead;
-    PVOID FlsBitmap;
-    ULONG FlsBitmapBits[FLS_MAXIMUM_AVAILABLE / (sizeof(ULONG) * 8)];
-    ULONG FlsHighIndex;
+    PVOID SparePointers[4]; // 19H1 (previously FlsCallback to FlsHighIndex)
+    ULONG SpareUlongs[5]; // 19H1
+    //PVOID* FlsCallback;
+    //LIST_ENTRY FlsListHead;
+    //PVOID FlsBitmap;
+    //ULONG FlsBitmapBits[FLS_MAXIMUM_AVAILABLE / (sizeof(ULONG) * 8)];
+    //ULONG FlsHighIndex;
 
     PVOID WerRegistrationData;
     PVOID WerShipAssertPtr;
@@ -8851,16 +8891,29 @@ typedef struct _PEB
     ULONG CloudFileDiagFlags; // REDSTONE4
     CHAR PlaceholderCompatibilityMode;
     CHAR PlaceholderCompatibilityModeReserved[7];
+    struct _LEAP_SECOND_DATA *LeapSecondData; // REDSTONE5
+    union
+    {
+        ULONG LeapSecondFlags;
+        struct
+        {
+            ULONG SixtySecondEnabled : 1;
+            ULONG Reserved : 31;
+        };
+    };
+    ULONG NtGlobalFlag2;
 } PEB, *PPEB;
 
 #ifdef _WIN64
 C_ASSERT(FIELD_OFFSET(PEB, SessionId) == 0x2C0);
 //C_ASSERT(sizeof(PEB) == 0x7B0); // REDSTONE3
-C_ASSERT(sizeof(PEB) == 0x7B8); // REDSTONE4
+//C_ASSERT(sizeof(PEB) == 0x7B8); // REDSTONE4
+C_ASSERT(sizeof(PEB) == 0x7C8); // REDSTONE5 // 19H1
 #else
 C_ASSERT(FIELD_OFFSET(PEB, SessionId) == 0x1D4);
 //C_ASSERT(sizeof(PEB) == 0x468); // REDSTONE3
-C_ASSERT(sizeof(PEB) == 0x470);
+//C_ASSERT(sizeof(PEB) == 0x470); // REDSTONE4
+C_ASSERT(sizeof(PEB) == 0x480); // REDSTONE5 // 19H1
 #endif
 
 #define GDI_BATCH_BUFFER_SIZE 310
@@ -9113,7 +9166,7 @@ typedef enum _PROCESSINFOCLASS
     ProcessHandleInformation, // q: PROCESS_HANDLE_SNAPSHOT_INFORMATION // since WIN8
     ProcessMitigationPolicy, // s: PROCESS_MITIGATION_POLICY_INFORMATION
     ProcessDynamicFunctionTableInformation,
-    ProcessHandleCheckingMode,
+    ProcessHandleCheckingMode, // qs: ULONG; s: 0 disables, otherwise enables
     ProcessKeepAliveCount, // q: PROCESS_KEEPALIVE_COUNT_INFORMATION
     ProcessRevokeFileHandles, // s: PROCESS_REVOKE_FILE_HANDLES_INFORMATION
     ProcessWorkingSetControl, // s: PROCESS_WORKING_SET_CONTROL
@@ -9139,7 +9192,7 @@ typedef enum _PROCESSINFOCLASS
     ProcessActivityThrottleState, // PROCESS_ACTIVITY_THROTTLE_STATE
     ProcessActivityThrottlePolicy, // PROCESS_ACTIVITY_THROTTLE_POLICY
     ProcessWin32kSyscallFilterInformation,
-    ProcessDisableSystemAllowedCpuSets,
+    ProcessDisableSystemAllowedCpuSets, // 80
     ProcessWakeInformation, // PROCESS_WAKE_INFORMATION
     ProcessEnergyTrackingState, // PROCESS_ENERGY_TRACKING_STATE
     ProcessManageWritesToExecutableMemory, // MANAGE_WRITES_TO_EXECUTABLE_MEMORY // since REDSTONE3
@@ -9149,9 +9202,16 @@ typedef enum _PROCESSINFOCLASS
     ProcessEnableReadWriteVmLogging, // PROCESS_READWRITEVM_LOGGING_INFORMATION
     ProcessUptimeInformation, // PROCESS_UPTIME_INFORMATION
     ProcessImageSection,
-    ProcessDebugAuthInformation, // since REDSTONE4
+    ProcessDebugAuthInformation, // since REDSTONE4 // 90
     ProcessSystemResourceManagement, // PROCESS_SYSTEM_RESOURCE_MANAGEMENT
     ProcessSequenceNumber, // q: ULONGLONG
+    ProcessLoaderDetour, // since REDSTONE5
+    ProcessSecurityDomainInformation, // PROCESS_SECURITY_DOMAIN_INFORMATION
+    ProcessCombineSecurityDomainsInformation, // PROCESS_COMBINE_SECURITY_DOMAINS_INFORMATION
+    ProcessEnableLogging, // PROCESS_LOGGING_INFORMATION
+    ProcessLeapSecondInformation, // PROCESS_LEAP_SECOND_INFORMATION
+    ProcessFiberShadowStackAllocation, // PROCESS_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION // since 19H1
+    ProcessFreeFiberShadowStackAllocation, // PROCESS_FREE_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION
     MaxProcessInfoClass
 } PROCESSINFOCLASS;
 
@@ -9200,13 +9260,14 @@ typedef enum _THREADINFOCLASS
     ThreadSystemThreadInformation, // q: SYSTEM_THREAD_INFORMATION // 40
     ThreadActualGroupAffinity, // since THRESHOLD2
     ThreadDynamicCodePolicyInfo,
-    ThreadExplicitCaseSensitivity,
+    ThreadExplicitCaseSensitivity, // qs: ULONG; s: 0 disables, otherwise enables
     ThreadWorkOnBehalfTicket,
     ThreadSubsystemInformation, // q: SUBSYSTEM_INFORMATION_TYPE // since REDSTONE2
     ThreadDbgkWerReportActive,
     ThreadAttachContainer,
     ThreadManageWritesToExecutableMemory, // MANAGE_WRITES_TO_EXECUTABLE_MEMORY // since REDSTONE3
     ThreadPowerThrottlingState, // THREAD_POWER_THROTTLING_STATE
+    ThreadWorkloadClass, // THREAD_WORKLOAD_CLASS // since REDSTONE5 // 50
     MaxThreadInfoClass
 } THREADINFOCLASS;
 
@@ -9587,6 +9648,7 @@ typedef struct _PROCESS_MITIGATION_POLICY_INFORMATION
         PROCESS_MITIGATION_SYSTEM_CALL_FILTER_POLICY SystemCallFilterPolicy;
         PROCESS_MITIGATION_PAYLOAD_RESTRICTION_POLICY PayloadRestrictionPolicy;
         PROCESS_MITIGATION_CHILD_PROCESS_POLICY ChildProcessPolicy;
+        PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY SideChannelIsolationPolicy;
     };
 } PROCESS_MITIGATION_POLICY_INFORMATION, *PPROCESS_MITIGATION_POLICY_INFORMATION;
 
@@ -9752,6 +9814,7 @@ typedef struct _MANAGE_WRITES_TO_EXECUTABLE_MEMORY
     ULONG ProcessEnableWriteExceptions : 1;
     ULONG ThreadAllowWrites : 1;
     ULONG Spare : 22;
+    PVOID KernelWriteToExecutableSignal; // 19H1
 } MANAGE_WRITES_TO_EXECUTABLE_MEMORY, *PMANAGE_WRITES_TO_EXECUTABLE_MEMORY;
 
 #define PROCESS_READWRITEVM_LOGGING_ENABLE_READVM 1
@@ -9796,6 +9859,55 @@ typedef union _PROCESS_SYSTEM_RESOURCE_MANAGEMENT
         ULONG Reserved : 31;
     };
 } PROCESS_SYSTEM_RESOURCE_MANAGEMENT, *PPROCESS_SYSTEM_RESOURCE_MANAGEMENT;
+
+// private
+typedef struct _PROCESS_SECURITY_DOMAIN_INFORMATION
+{
+    ULONGLONG SecurityDomain;
+} PROCESS_SECURITY_DOMAIN_INFORMATION, *PPROCESS_SECURITY_DOMAIN_INFORMATION;
+
+// private
+typedef struct _PROCESS_COMBINE_SECURITY_DOMAINS_INFORMATION
+{
+    HANDLE ProcessHandle;
+} PROCESS_COMBINE_SECURITY_DOMAINS_INFORMATION, *PPROCESS_COMBINE_SECURITY_DOMAINS_INFORMATION;
+
+// private
+typedef struct _PROCESS_LOGGING_INFORMATION
+{
+    ULONG Flags;
+    struct
+    {
+        ULONG EnableReadVmLogging : 1;
+        ULONG EnableWriteVmLogging : 1;
+        ULONG EnableProcessSuspendResumeLogging : 1;
+        ULONG EnableThreadSuspendResumeLogging : 1;
+        ULONG Reserved : 28;
+    };
+} PROCESS_LOGGING_INFORMATION, *PPROCESS_LOGGING_INFORMATION;
+
+// private
+typedef struct _PROCESS_LEAP_SECOND_INFORMATION
+{
+    ULONG Flags;
+    ULONG Reserved;
+} PROCESS_LEAP_SECOND_INFORMATION, *PPROCESS_LEAP_SECOND_INFORMATION;
+
+// private
+typedef struct _PROCESS_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION
+{
+    ULONGLONG ReserveSize;
+    ULONGLONG CommitSize;
+    ULONG PreferredNode;
+    ULONG Reserved;
+    PVOID Ssp;
+} PROCESS_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION, *PPROCESS_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION;
+
+// private
+typedef struct _PROCESS_FREE_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION
+{
+    PVOID Ssp;
+} PROCESS_FREE_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION, *PPROCESS_FREE_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION;
 
 // end_private
 
@@ -9921,9 +10033,16 @@ typedef struct _THREAD_UMS_INFORMATION
     THREAD_UMS_INFORMATION_COMMAND Command;
     PRTL_UMS_COMPLETION_LIST CompletionList;
     PRTL_UMS_CONTEXT UmsContext;
-    ULONG Flags;
-    ULONG IsUmsSchedulerThread;
-    ULONG IsUmsWorkerThread;
+    union
+    {
+        ULONG Flags;
+        struct
+        {
+            ULONG IsUmsSchedulerThread : 1;
+            ULONG IsUmsWorkerThread : 1;
+            ULONG SpareBits : 30;
+        };
+    };
 } THREAD_UMS_INFORMATION, *PTHREAD_UMS_INFORMATION;
 
 // private
@@ -9939,6 +10058,14 @@ typedef enum _SUBSYSTEM_INFORMATION_TYPE
     SubsystemInformationTypeWSL,
     MaxSubsystemInformationType
 } SUBSYSTEM_INFORMATION_TYPE;
+
+// private
+typedef enum _THREAD_WORKLOAD_CLASS
+{
+    ThreadWorkloadClassDefault,
+    ThreadWorkloadClassGraphics,
+    MaxThreadWorkloadClass
+} THREAD_WORKLOAD_CLASS;
 
 // Processes
 
@@ -10773,7 +10900,10 @@ typedef enum _PS_MITIGATION_OPTION
     PS_MITIGATION_OPTION_RESTRICT_CHILD_PROCESS_CREATION,
     PS_MITIGATION_OPTION_IMPORT_ADDRESS_FILTER,
     PS_MITIGATION_OPTION_MODULE_TAMPERING_PROTECTION,
-    PS_MITIGATION_OPTION_RESTRICT_INDIRECT_BRANCH_PREDICTION
+    PS_MITIGATION_OPTION_RESTRICT_INDIRECT_BRANCH_PREDICTION,
+    PS_MITIGATION_OPTION_SPECULATIVE_STORE_BYPASS_DISABLE, // since REDSTONE5
+    PS_MITIGATION_OPTION_ALLOW_DOWNGRADE_DYNAMIC_CODE_POLICY,
+    PS_MITIGATION_OPTION_CET_SHADOW_STACKS
 } PS_MITIGATION_OPTION;
 
 // windows-internals-book:"Chapter 5"
@@ -14727,7 +14857,7 @@ typedef struct _ALPC_HANDLE_ATTR
 } ALPC_HANDLE_ATTR, *PALPC_HANDLE_ATTR;
 
 #define ALPC_SECFLG_CREATE_HANDLE 0x20000 // dbg
-
+#define ALPC_SECFLG_NOSECTIONHANDLE 0x40000
 // private
 typedef struct _ALPC_SECURITY_ATTR
 {
@@ -15370,6 +15500,10 @@ AlpcGetHeaderSize(
     _In_ ULONG Flags
     );
 
+#define ALPC_ATTRFLG_ALLOCATEDATTR 0x20000000
+#define ALPC_ATTRFLG_VALIDATTR 0x40000000
+#define ALPC_ATTRFLG_KEEPRUNNINGATTR 0x60000000
+
 NTSYSAPI
 NTSTATUS
 NTAPI
@@ -15623,7 +15757,7 @@ typedef struct _PF_PRIVSOURCE_INFO
     ULONG Spare : 28;
 } PF_PRIVSOURCE_INFO, *PPF_PRIVSOURCE_INFO;
 
-#define PF_PRIVSOURCE_QUERY_REQUEST_VERSION 3
+#define PF_PRIVSOURCE_QUERY_REQUEST_VERSION 8
 
 typedef struct _PF_PRIVSOURCE_QUERY_REQUEST
 {
@@ -16004,7 +16138,7 @@ typedef struct _COUNTED_REASON_CONTEXT
 /** \endcond */
 #endif
 
-typedef enum
+typedef enum _POWER_STATE_HANDLER_TYPE
 {
     PowerStateSleeping1 = 0,
     PowerStateSleeping2 = 1,
@@ -18576,7 +18710,7 @@ VOID
 NTAPI
 RtlInitEmptyUnicodeString(
     _Out_ PUNICODE_STRING DestinationString,
-    _In_ PWCHAR Buffer,
+    _In_opt_ PWCHAR Buffer,
     _In_ USHORT MaximumLength
     )
 {
@@ -19692,6 +19826,11 @@ typedef struct _RTL_USER_PROCESS_PARAMETERS
     PVOID PackageDependencyData;
     ULONG ProcessGroupId;
     ULONG LoaderThreads;
+
+    UNICODE_STRING RedirectionDllName; // REDSTONE4
+    UNICODE_STRING HeapPartitionName; // 19H1
+    ULONG_PTR DefaultThreadpoolCpuSetMasks;
+    ULONG DefaultThreadpoolCpuSetMaskCount;
 } RTL_USER_PROCESS_PARAMETERS, *PRTL_USER_PROCESS_PARAMETERS;
 
 #define RTL_USER_PROC_PARAMS_NORMALIZED 0x00000001
@@ -19787,6 +19926,17 @@ RtlCreateUserProcess(
     _In_ BOOLEAN InheritHandles,
     _In_opt_ HANDLE DebugPort,
     _In_opt_ HANDLE TokenHandle, // used to be ExceptionPort
+    _Out_ PRTL_USER_PROCESS_INFORMATION ProcessInformation
+    );
+
+NTSYSAPI
+NTSTATUS
+NTAPI
+RtlCreateUserProcessEx(
+    _In_ PUNICODE_STRING NtImagePathName,
+    _In_ PRTL_USER_PROCESS_PARAMETERS ProcessParameters,
+    _In_ BOOLEAN InheritHandles,
+    _Reserved_ ULONG Flags,
     _Out_ PRTL_USER_PROCESS_INFORMATION ProcessInformation
     );
 
@@ -20430,7 +20580,7 @@ NTAPI
 RtlSetEnvironmentVariable(
     _In_opt_ PVOID *Environment,
     _In_ PUNICODE_STRING Name,
-    _In_ PUNICODE_STRING Value
+    _In_opt_ PUNICODE_STRING Value
     );
 
 #if (NTDDI_VERSION >= NTDDI_VISTA)
@@ -20531,6 +20681,13 @@ RTL_PATH_TYPE
 NTAPI
 RtlDetermineDosPathNameType_U(
     _In_ PWSTR DosFileName
+    );
+
+NTSYSAPI
+RTL_PATH_TYPE
+NTAPI
+RtlDetermineDosPathNameType_Ustr(
+    _In_ PCUNICODE_STRING DosFileName
     );
 
 NTSYSAPI
@@ -21226,6 +21383,13 @@ RtlWalkHeap(
 #define HeapDetailedFailureInformation 0x80000001
 #define HeapSetDebuggingInformation 0x80000002 // q; s: HEAP_DEBUGGING_INFORMATION
 
+typedef enum _HEAP_COMPATIBILITY_MODE
+{
+    HEAP_COMPATIBILITY_STANDARD = 0UL,
+    HEAP_COMPATIBILITY_LAL = 1UL,
+    HEAP_COMPATIBILITY_LFH = 2UL,
+} HEAP_COMPATIBILITY_MODE;
+
 typedef struct _PROCESS_HEAP_INFORMATION
 {
     ULONG_PTR ReserveSize;
@@ -21251,8 +21415,11 @@ typedef struct _HEAP_EXTENDED_INFORMATION
     ULONG Level;
     PVOID CallbackRoutine;
     PVOID CallbackContext;
-    PROCESS_HEAP_INFORMATION ProcessHeapInformation;
-    HEAP_INFORMATION HeapInformation;
+    union
+    {
+        PROCESS_HEAP_INFORMATION ProcessHeapInformation;
+        HEAP_INFORMATION HeapInformation;
+    };
 } HEAP_EXTENDED_INFORMATION, *PHEAP_EXTENDED_INFORMATION;
 
 // rev
@@ -24211,7 +24378,9 @@ RtlGetFrame(
     VOID
     );
 
-#define RTL_STACK_WALKING_MODE_FRAMES_TO_SKIP_SHIFT 8
+#define RTL_WALK_USER_MODE_STACK 0x00000001
+#define RTL_WALK_VALID_FLAGS 0x00000001
+#define RTL_STACK_WALKING_MODE_FRAMES_TO_SKIP_SHIFT 0x00000008
 
 // private
 NTSYSAPI
@@ -24536,6 +24705,7 @@ typedef struct _RTL_IMAGE_MITIGATION_PAYLOAD_RESTRICTION_POLICY
     RTL_IMAGE_MITIGATION_POLICY EnableRopStackPivot;
     RTL_IMAGE_MITIGATION_POLICY EnableRopCallerCheck;
     RTL_IMAGE_MITIGATION_POLICY EnableRopSimExec;
+    WCHAR EafPlusModuleList[512]; // 19H1
 } RTL_IMAGE_MITIGATION_PAYLOAD_RESTRICTION_POLICY, *PRTL_IMAGE_MITIGATION_PAYLOAD_RESTRICTION_POLICY;
 
 // rev
@@ -24705,6 +24875,15 @@ RtlCheckTokenMembershipEx(
     _In_ PSID SidToCheck,
     _In_ ULONG Flags, // CTMF_VALID_FLAGS
     _Out_ PBOOLEAN IsMember
+    );
+
+// rev
+NTSYSAPI
+NTSTATUS
+NTAPI
+RtlQueryTokenHostIdAsUlong64(
+    _In_ HANDLE TokenHandle,
+    _Out_ PULONG64 HostId // (WIN://PKGHOSTID)
     );
 
 // rev
@@ -25104,7 +25283,8 @@ RtlFlushSecureMemoryCache(
 #define SE_INC_WORKING_SET_PRIVILEGE (33L)
 #define SE_TIME_ZONE_PRIVILEGE (34L)
 #define SE_CREATE_SYMBOLIC_LINK_PRIVILEGE (35L)
-#define SE_MAX_WELL_KNOWN_PRIVILEGE SE_CREATE_SYMBOLIC_LINK_PRIVILEGE
+#define SE_DELEGATE_SESSION_USER_IMPERSONATE_PRIVILEGE (36L)
+#define SE_MAX_WELL_KNOWN_PRIVILEGE SE_DELEGATE_SESSION_USER_IMPERSONATE_PRIVILEGE
 
 // Authz
 
@@ -25129,6 +25309,7 @@ RtlFlushSecureMemoryCache(
 #define TOKEN_SECURITY_ATTRIBUTE_DISABLED_BY_DEFAULT 0x0008
 #define TOKEN_SECURITY_ATTRIBUTE_DISABLED 0x0010
 #define TOKEN_SECURITY_ATTRIBUTE_MANDATORY 0x0020
+#define TOKEN_SECURITY_ATTRIBUTE_COMPARE_IGNORE 0x0040
 
 #define TOKEN_SECURITY_ATTRIBUTE_VALID_FLAGS ( \
     TOKEN_SECURITY_ATTRIBUTE_NON_INHERITABLE | \
@@ -25496,7 +25677,7 @@ NtAdjustGroupsToken(
     _In_opt_ PTOKEN_GROUPS NewState,
     _In_opt_ ULONG BufferLength,
     _Out_writes_bytes_to_opt_(BufferLength, *ReturnLength) PTOKEN_GROUPS PreviousState,
-    _Out_ PULONG ReturnLength
+    _Out_opt_ PULONG ReturnLength
     );
 
 NTSYSCALLAPI
@@ -25508,7 +25689,7 @@ ZwAdjustGroupsToken(
     _In_opt_ PTOKEN_GROUPS NewState,
     _In_opt_ ULONG BufferLength,
     _Out_writes_bytes_to_opt_(BufferLength, *ReturnLength) PTOKEN_GROUPS PreviousState,
-    _Out_ PULONG ReturnLength
+    _Out_opt_ PULONG ReturnLength
     );
 
 #if (NTDDI_VERSION >= NTDDI_WIN8)
@@ -27646,7 +27827,8 @@ typedef struct _LDR_DATA_TABLE_ENTRY32
             ULONG CorImage : 1;
             ULONG DontRelocate : 1;
             ULONG CorILOnly : 1;
-            ULONG ReservedFlags5 : 3;
+            ULONG ChpeImage : 1;
+            ULONG ReservedFlags5 : 2;
             ULONG Redirected : 1;
             ULONG ReservedFlags6 : 2;
             ULONG CompatDatabaseProcessed : 1;
@@ -27730,6 +27912,11 @@ typedef struct _RTL_USER_PROCESS_PARAMETERS32
     WOW64_POINTER(PVOID) PackageDependencyData;
     ULONG ProcessGroupId;
     ULONG LoaderThreads;
+
+    UNICODE_STRING32 RedirectionDllName; // REDSTONE4
+    UNICODE_STRING32 HeapPartitionName; // 19H1
+    WOW64_POINTER(ULONG_PTR) DefaultThreadpoolCpuSetMasks;
+    ULONG DefaultThreadpoolCpuSetMaskCount;
 } RTL_USER_PROCESS_PARAMETERS32, *PRTL_USER_PROCESS_PARAMETERS32;
 
 typedef struct _PEB32
@@ -27780,7 +27967,7 @@ typedef struct _PEB32
         WOW64_POINTER(PVOID) KernelCallbackTable;
         WOW64_POINTER(PVOID) UserSharedInfoPtr;
     };
-    ULONG SystemReserved[1];
+    ULONG SystemReserved;
     ULONG AtlThunkSListPtr32;
     WOW64_POINTER(PVOID) ApiSetMap;
     ULONG TlsExpansionCounter;
@@ -27843,11 +28030,13 @@ typedef struct _PEB32
 
     WOW64_POINTER(SIZE_T) MinimumStackCommit;
 
-    WOW64_POINTER(PVOID *) FlsCallback;
-    LIST_ENTRY32 FlsListHead;
-    WOW64_POINTER(PVOID) FlsBitmap;
-    ULONG FlsBitmapBits[FLS_MAXIMUM_AVAILABLE / (sizeof(ULONG) * 8)];
-    ULONG FlsHighIndex;
+    WOW64_POINTER(PVOID) SparePointers[4];
+    ULONG SpareUlongs[5];
+    //WOW64_POINTER(PVOID *) FlsCallback;
+    //LIST_ENTRY32 FlsListHead;
+    //WOW64_POINTER(PVOID) FlsBitmap;
+    //ULONG FlsBitmapBits[FLS_MAXIMUM_AVAILABLE / (sizeof(ULONG) * 8)];
+    //ULONG FlsHighIndex;
 
     WOW64_POINTER(PVOID) WerRegistrationData;
     WOW64_POINTER(PVOID) WerShipAssertPtr;
