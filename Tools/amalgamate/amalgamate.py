@@ -29,13 +29,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
-import argparse
 import datetime
-import json
 import os
 import re
 
@@ -61,17 +55,18 @@ class Amalgamation(object):
                 return search_path
         return None
 
-    def __init__(self, args):
-        with open(args.config, 'r') as f:
-            config = json.loads(f.read())
-            for key in config:
-                setattr(self, key, config[key])
+    def __init__(self):
+        self.project = "Mouri's Internal NT API Collections (MINT)"
+        self.target = "MINT.h"
+        self.sources = ("phnt_windows.h", "phnt.h")
+        self.include_paths = (".")
 
-            self.verbose = args.verbose == "yes"
-            self.prologue = args.prologue
-            self.source_path = args.source_path
-            self.included_files = []
-
+        self.verbose = True
+        self.prologue = ""
+        self.source_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..\\..\\Source"))
+        
+        self.included_files = []
+            
     # Generate the amalgamation and write it to the target file.
     def generate(self):
         amalgamation = ""
@@ -266,34 +261,9 @@ class TranslationUnit(object):
             self.content = f.read()
             self._process()
 
-
 def main():
-    description = "Amalgamate C source and header files."
-    usage = " ".join([
-        "amalgamate.py",
-        "[-v]",
-        "-c path/to/config.json",
-        "-s path/to/source/dir",
-        "[-p path/to/prologue.(c|h)]"
-    ])
-    argsparser = argparse.ArgumentParser(
-        description=description, usage=usage)
-
-    argsparser.add_argument("-v", "--verbose", dest="verbose",
-                            choices=["yes", "no"], metavar="", help="be verbose")
-
-    argsparser.add_argument("-c", "--config", dest="config",
-                            required=True, metavar="", help="path to a JSON config file")
-
-    argsparser.add_argument("-s", "--source", dest="source_path",
-                            required=True, metavar="", help="source code path")
-
-    argsparser.add_argument("-p", "--prologue", dest="prologue",
-                            required=False, metavar="", help="path to a C prologue file")
-
-    amalgamation = Amalgamation(argsparser.parse_args())
+    amalgamation = Amalgamation()
     amalgamation.generate()
-
 
 if __name__ == "__main__":
     main()
