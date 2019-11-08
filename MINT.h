@@ -92,6 +92,10 @@
 #undef DBG_REPLY_LATER
 #undef DBG_PRINTEXCEPTION_WIDE_C
 
+#undef STATUS_ALREADY_REGISTERED
+#undef STATUS_INTERRUPTED
+#undef STATUS_THREAD_NOT_RUNNING
+
 #include <ntstatus.h>
 
 typedef double DOUBLE;
