@@ -23,6 +23,12 @@
 #ifndef _MINT_
 #define _MINT_
 
+#ifdef __cplusplus
+#ifdef MINT_USE_SEPARATE_NAMESPACE
+namespace MINT {
+#endif
+#endif
+
 // This header file provides access to Win32, plus NTSTATUS values and some access mask values.
 
 #include <windows.h>
@@ -31585,5 +31591,11 @@ _WinStationWaitForConnect(
 #endif
 
 
+
+#ifdef __cplusplus
+#ifdef MINT_USE_SEPARATE_NAMESPACE
+}
+#endif
+#endif
 
 #endif // !_MINT_
