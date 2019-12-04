@@ -10081,8 +10081,6 @@ typedef struct _PROCESS_FREE_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION
 
 // end_private
 
-#endif
-
 // Thread information structures
 
 typedef struct _THREAD_BASIC_INFORMATION
@@ -10230,14 +10228,6 @@ typedef enum _SUBSYSTEM_INFORMATION_TYPE
     SubsystemInformationTypeWSL,
     MaxSubsystemInformationType
 } SUBSYSTEM_INFORMATION_TYPE;
-
-// private
-typedef enum _THREAD_WORKLOAD_CLASS
-{
-    ThreadWorkloadClassDefault,
-    ThreadWorkloadClassGraphics,
-    MaxThreadWorkloadClass
-} THREAD_WORKLOAD_CLASS;
 
 // private
 typedef enum _THREAD_WORKLOAD_CLASS
