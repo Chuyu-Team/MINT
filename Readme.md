@@ -20,6 +20,13 @@ you can browse our fork from https://github.com/Chuyu-Team/phnt.
 ## How to use
 Copy MINT.h to your project and directly include it.
 
+```
+// If you wonder to use separate namespace, please define the following macro.
+#define MINT_USE_SEPARATE_NAMESPACE
+
+#include "MINT.h"
+```
+
 ## License
 Because https://github.com/processhacker/phnt is distributed under the 
 Attribution 4.0 International (CC BY 4.0) license. Also I read the 
