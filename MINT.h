@@ -4045,7 +4045,7 @@ typedef struct _SYSTEM_THREAD_INFORMATION
     KWAIT_REASON WaitReason;
 } SYSTEM_THREAD_INFORMATION, *PSYSTEM_THREAD_INFORMATION;
 
-typedef struct _TEB *PTEB;
+typedef struct _TEB TEB, *PTEB;
 
 // private
 typedef struct _SYSTEM_EXTENDED_THREAD_INFORMATION
@@ -9108,7 +9108,7 @@ typedef struct _TEB_ACTIVE_FRAME
     PTEB_ACTIVE_FRAME_CONTEXT Context;
 } TEB_ACTIVE_FRAME, *PTEB_ACTIVE_FRAME;
 
-typedef struct _TEB
+struct _TEB
 {
     NT_TIB NtTib;
 
@@ -9275,7 +9275,7 @@ typedef struct _TEB
     PVOID ReservedForWdf;
     ULONGLONG ReservedForCrt;
     GUID EffectiveContainerId;
-} TEB, *PTEB;
+};
  
 
 
