@@ -119,6 +119,8 @@ namespace MINT {
 #undef STATUS_INTERRUPTED
 #undef STATUS_THREAD_NOT_RUNNING
 
+#undef STATUS_CONTROL_STACK_VIOLATION
+
 #undef WIN32_NO_STATUS
 #include <ntstatus.h>
 
@@ -29999,7 +30001,9 @@ RtlAssert(
 
 
 // #include <ntd3dkmt.h>
-typedef UINT32 D3DKMT_HANDLE;
+#include <dxmini.h>
+#include <d3dkmddi.h>
+
 typedef D3DKMT_HANDLE* PD3DKMT_HANDLE;
 
 typedef enum _KMTQUERYADAPTERINFOTYPE
@@ -30911,22 +30915,6 @@ typedef struct _D3DKMT_QUERY_SCANOUT_CAPS
     ULONG VidPnSourceId;
     UINT Caps;
 } D3DKMT_QUERY_SCANOUT_CAPS;
-
-typedef struct _D3DKMT_WDDM_2_7_CAPS
-{
-    union
-    {
-        struct
-        {
-            UINT32 HwSchSupported : 1;
-            UINT32 HwSchEnabled : 1;
-            UINT32 HwSchEnabledByDefault : 1;
-            UINT32 ReseIndependentVidPnVSyncControlrved : 1;
-            UINT32 Reserved : 28;
-        };
-        UINT32 Value;
-    };
-} D3DKMT_WDDM_2_7_CAPS;
 
 // Describes the mapping of the given name of a device to a graphics adapter handle and monitor output.
 typedef struct _D3DKMT_OPENADAPTERFROMDEVICENAME
