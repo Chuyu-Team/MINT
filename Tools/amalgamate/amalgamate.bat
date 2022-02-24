@@ -1,2 +1,2 @@
-"C:\Program Files\Python39\python.exe" amalgamate.py
+python.exe amalgamate.py
 pause
