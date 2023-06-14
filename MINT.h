@@ -1,22 +1,22 @@
 ﻿/*
  * PROJECT:   Mouri's Internal NT API Collections (MINT)
  * FILE:      MINT.h
- * PURPOSE:   Definition for the Windows Internal API from ntdll.dll, 
+ * PURPOSE:   Definition for the Windows Internal API from ntdll.dll,
  *            samlib.dll and winsta.dll
  *
  * LICENSE:   Relicensed under The MIT License from The CC BY 4.0 License
  *
- * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ * DEVELOPER: MouriNaruto (KurikoMouri@outlook.jp)
  */
 
 /*
- * This file is part of the Process Hacker project - https://processhacker.sf.io/ 
+ * This file is part of the Process Hacker project - https://processhacker.sf.io/
  *
- * You can redistribute this file and/or modify it under the terms of the 
- * Attribution 4.0 International (CC BY 4.0) license. 
- * 
- * You must give appropriate credit, provide a link to the license, and 
- * indicate if changes were made. You may do so in any reasonable manner, but 
+ * You can redistribute this file and/or modify it under the terms of the
+ * Attribution 4.0 International (CC BY 4.0) license.
+ *
+ * You must give appropriate credit, provide a link to the license, and
+ * indicate if changes were made. You may do so in any reasonable manner, but
  * not in any way that suggests the licensor endorses you or your use.
  */
 
@@ -101,7 +101,7 @@ typedef GUID *PGUID;
     (WMIGUID_EXECUTE | TRACELOG_GUID_ENABLE | TRACELOG_LOG_EVENT | \
     TRACELOG_ACCESS_REALTIME | TRACELOG_REGISTER_GUIDS | \
     STANDARD_RIGHTS_EXECUTE)
- 
+
 // This header file provides access to NT APIs.
 
 // Definitions are annotated to indicate their source. If a definition is not annotated, it has been
@@ -472,7 +472,7 @@ typedef struct _KSYSTEM_TIME
 #endif
 
 #endif
- 
+
 
 // #include <ntnls.h>
 #define MAXIMUM_LEADBYTES 12
@@ -504,7 +504,7 @@ typedef struct _NLSTABLEINFO
 NTSYSAPI USHORT NlsAnsiCodePage;
 NTSYSAPI BOOLEAN NlsMbCodePageTag;
 NTSYSAPI BOOLEAN NlsMbOemCodePageTag;
- 
+
 
 // #include <ntkeapi.h>
 #define LOW_PRIORITY 0 // Lowest thread priority level
@@ -700,7 +700,7 @@ NTAPI
 ZwYieldExecution(
     VOID
     );
- 
+
 
 
 // #include <ntldr.h>
@@ -9293,18 +9293,18 @@ ZwDrawText(
     _In_ PUNICODE_STRING Text
     );
 #endif
- 
+
 
 
 // #include <ntbcd.h>
 /*
  * This file is part of the Process Hacker project - https://processhacker.sourceforge.io/
  *
- * You can redistribute this file and/or modify it under the terms of the 
- * Attribution 4.0 International (CC BY 4.0) license. 
- * 
- * You must give appropriate credit, provide a link to the license, and 
- * indicate if changes were made. You may do so in any reasonable manner, but 
+ * You can redistribute this file and/or modify it under the terms of the
+ * Attribution 4.0 International (CC BY 4.0) license.
+ *
+ * You must give appropriate credit, provide a link to the license, and
+ * indicate if changes were made. You may do so in any reasonable manner, but
  * not in any way that suggests the licensor endorses you or your use.
  */
 
@@ -14706,7 +14706,7 @@ typedef struct _PROCESS_HANDLE_SNAPSHOT_INFORMATION
 } PROCESS_HANDLE_SNAPSHOT_INFORMATION, *PPROCESS_HANDLE_SNAPSHOT_INFORMATION;
 
 #if !defined(NTDDI_WIN10_FE) || (NTDDI_VERSION < NTDDI_WIN10_FE)
-typedef struct _PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY 
+typedef struct _PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY
 {
     union {
         ULONG Flags;
@@ -17434,7 +17434,7 @@ EtwEventRegister(
     _In_opt_ PVOID CallbackContext,
     _Out_ PREGHANDLE RegHandle
     );
- 
+
 
 // #include <ntioapi.h>
 // Create disposition
@@ -21744,7 +21744,7 @@ AlpcGetCompletionListMessageAttributes(
 #endif
 
 // end_private
- 
+
 
 // #include <ntpfapi.h>
 // begin_private
@@ -22026,7 +22026,7 @@ typedef struct _SUPERFETCH_INFORMATION
 } SUPERFETCH_INFORMATION, *PSUPERFETCH_INFORMATION;
 
 // end_private
- 
+
 
 // #include <ntpnpapi.h>
 typedef enum _PLUGPLAY_EVENT_CATEGORY
@@ -22232,7 +22232,7 @@ ZwReplacePartitionUnit(
     _In_ ULONG Flags
     );
 #endif
- 
+
 
 // #include <ntpoapi.h>
 // POWER_INFORMATION_LEVEL
@@ -33953,7 +33953,7 @@ ZwPrivilegedServiceAuditAlarm(
     _In_ PPRIVILEGE_SET Privileges,
     _In_ BOOLEAN AccessGranted
     );
- 
+
 
 // #include <nttmapi.h>
 #if (NTDDI_VERSION >= NTDDI_VISTA)
@@ -34811,7 +34811,7 @@ ZwThawTransactions(
     VOID
     );
 #endif
- 
+
 
 // #include <nttp.h>
 // Some types are already defined in winnt.h.
@@ -35265,7 +35265,7 @@ TpCheckTerminateWorker(
     );
 
 #endif
- 
+
 
 // #include <ntxcapi.h>
 NTSYSAPI
@@ -35391,7 +35391,7 @@ RtlAssert(
     ((!(_exp)) ? (DbgPrint("%s(%d): Soft assertion failed\n   Expression: %s\n", __FILE__, __LINE__, #_exp), FALSE) : TRUE)
 #define RTL_SOFT_ASSERTMSG(_msg, _exp) \
     ((!(_exp)) ? (DbgPrint("%s(%d): Soft assertion failed\n   Expression: %s\n   Message: %s\n", __FILE__, __LINE__, #_exp, (_msg)), FALSE) : TRUE)
- 
+
 
 
 // #include <ntwow64.h>
@@ -35980,7 +35980,7 @@ FORCEINLINE VOID UStrToUStr32(
     Destination->MaximumLength = Source->MaximumLength;
     Destination->Buffer = PtrToUlong(Source->Buffer);
 }
- 
+
 
 
 #include <ntlsa.h>
@@ -37866,7 +37866,7 @@ SamPerformGenericOperation(
     _In_ PSAM_GENERIC_OPERATION_INPUT OperationIn,
     _Out_ PSAM_GENERIC_OPERATION_OUTPUT *OperationOut
     );
- 
+
 
 
 // #include <ntmisc.h>
@@ -38008,7 +38008,7 @@ ZwTraceControl(
     _Out_ PULONG ReturnLength
     );
 #endif
- 
+
 
 
 // #include <ntsmss.h>
@@ -38029,7 +38029,7 @@ RtlSendMsgToSm(
     _In_ HANDLE ApiPortHandle,
     _In_ PPORT_MESSAGE MessageData
     );
- 
+
 
 
 // #include <subprocesstag.h>
@@ -38122,7 +38122,7 @@ typedef ULONG (WINAPI *PQUERY_TAG_INFORMATION)(
     _In_ TAG_INFO_LEVEL InfoLevel,
     _Inout_ PVOID TagInfo
     );
- 
+
 
 
 // #include <winsta.h>
@@ -39183,7 +39183,7 @@ WINAPI
 _WinStationWaitForConnect(
     VOID
     );
- 
+
 
 
 #ifdef __cplusplus
