@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Kernel executive support library
  *
  * This file is part of System Informer.

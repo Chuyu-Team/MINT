@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Process and Thread Environment Block support functions
  *
  * This file is part of System Informer.

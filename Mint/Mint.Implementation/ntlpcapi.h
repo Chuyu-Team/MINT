@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Local Inter-process Communication support functions
  *
  * This file is part of System Informer.

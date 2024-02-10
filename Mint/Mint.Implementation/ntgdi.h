@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Graphics device interface support
  *
  * This file is part of System Informer.

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * User Manager service API definitions.
  *
  * This file is part of System Informer.

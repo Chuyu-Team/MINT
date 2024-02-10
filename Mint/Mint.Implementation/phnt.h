@@ -1,4 +1,4 @@
-/*
+﻿/*
  * NT Header annotations
  *
  * This file is part of System Informer.

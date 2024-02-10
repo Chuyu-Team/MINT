@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Executive support library functions
  *
  * This file is part of System Informer.

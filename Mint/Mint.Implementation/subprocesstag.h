@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Subprocess tag information
  *
  * This file is part of System Informer.

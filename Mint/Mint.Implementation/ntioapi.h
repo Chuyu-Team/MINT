@@ -1,4 +1,4 @@
-/*
+﻿/*
  * File management support
  *
  * This file is part of System Informer.
