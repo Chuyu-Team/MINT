@@ -21,6 +21,19 @@ namespace MINT {
 
 #include <SDKDDKVer.h>
 
+#ifdef _MSC_VER
+#if (_MSC_VER >= 1200)
+#pragma warning(push)
+// nonstandard extension used : nameless struct/union
+#pragma warning(disable:4201)
+// 'struct_name' : structure was padded due to __declspec(align())
+#pragma warning(disable:4324)
+// 'enumeration': a forward declaration of an unscoped enumeration must have an
+// underlying type (int assumed)
+#pragma warning(disable:4471)
+#endif // (_MSC_VER >= 1200)
+#endif // _MSC_VER
+
 #ifndef PHNT_MODE
 #ifdef _KERNEL_MODE
 #define PHNT_MODE PHNT_MODE_KERNEL
@@ -79,7 +92,6 @@ extern "C" {
 
 #include "Mint.Implementation/ntgdi.h"
 #include "Mint.Implementation/ntsmss.h"
-#include "Mint.Implementation/ntsxs.h"
 #include "Mint.Implementation/subprocesstag.h"
 #include "Mint.Implementation/usermgr.h"
 #include "Mint.Implementation/winsta.h"
@@ -97,6 +109,12 @@ extern "C" {
 #pragma comment(lib,"winsta.lib")
 
 #endif // (PHNT_MODE != PHNT_MODE_KERNEL)
+
+#ifdef _MSC_VER
+#if (_MSC_VER >= 1200)
+#pragma warning(pop)
+#endif // (_MSC_VER >= 1200)
+#endif // _MSC_VER
 
 #ifdef __cplusplus
 #ifdef MINT_USE_SEPARATE_NAMESPACE
