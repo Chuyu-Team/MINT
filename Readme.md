@@ -10,6 +10,7 @@ project is based on a modified fork of https://github.com/processhacker/phnt,
 you can browse our fork from https://github.com/Chuyu-Team/phnt.
 
 ## The difference from https://github.com/processhacker/phnt
+
 - Single File.
 - No kernel mode definitions.
 - Compiling using the `/W4 /WX` option is supported.
@@ -18,6 +19,7 @@ you can browse our fork from https://github.com/Chuyu-Team/phnt.
 - "Zw*" API is under the management of Windows SDK version macros.
 
 ## How to use
+
 Copy MINT.h to your project and directly include it.
 
 ```
@@ -28,6 +30,7 @@ Copy MINT.h to your project and directly include it.
 ```
 
 ## License
+
 Because https://github.com/processhacker/phnt is distributed under the 
 Attribution 4.0 International (CC BY 4.0) license. Also I read the 
 https://creativecommons.org/licenses/by/4.0/deed.en and know I only need to 
