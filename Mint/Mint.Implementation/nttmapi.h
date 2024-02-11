@@ -19,6 +19,18 @@ NtCreateTransactionManager(
     _In_opt_ ULONG CreateOptions,
     _In_opt_ ULONG CommitStrength
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwCreateTransactionManager(
+    _Out_ PHANDLE TmHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_opt_ PUNICODE_STRING LogFileName,
+    _In_opt_ ULONG CreateOptions,
+    _In_opt_ ULONG CommitStrength
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -26,6 +38,18 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtOpenTransactionManager(
+    _Out_ PHANDLE TmHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_opt_ PUNICODE_STRING LogFileName,
+    _In_opt_ LPGUID TmIdentity,
+    _In_opt_ ULONG OpenOptions
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwOpenTransactionManager(
     _Out_ PHANDLE TmHandle,
     _In_ ACCESS_MASK DesiredAccess,
     _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
@@ -43,6 +67,14 @@ NtRenameTransactionManager(
     _In_ PUNICODE_STRING LogFileName,
     _In_ LPGUID ExistingTransactionManagerGuid
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwRenameTransactionManager(
+    _In_ PUNICODE_STRING LogFileName,
+    _In_ LPGUID ExistingTransactionManagerGuid
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -50,6 +82,14 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtRollforwardTransactionManager(
+    _In_ HANDLE TransactionManagerHandle,
+    _In_opt_ PLARGE_INTEGER TmVirtualClock
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwRollforwardTransactionManager(
     _In_ HANDLE TransactionManagerHandle,
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
@@ -62,6 +102,13 @@ NTAPI
 NtRecoverTransactionManager(
     _In_ HANDLE TransactionManagerHandle
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwRecoverTransactionManager(
+    _In_ HANDLE TransactionManagerHandle
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -69,6 +116,17 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtQueryInformationTransactionManager(
+    _In_ HANDLE TransactionManagerHandle,
+    _In_ TRANSACTIONMANAGER_INFORMATION_CLASS TransactionManagerInformationClass,
+    _Out_writes_bytes_(TransactionManagerInformationLength) PVOID TransactionManagerInformation,
+    _In_ ULONG TransactionManagerInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwQueryInformationTransactionManager(
     _In_ HANDLE TransactionManagerHandle,
     _In_ TRANSACTIONMANAGER_INFORMATION_CLASS TransactionManagerInformationClass,
     _Out_writes_bytes_(TransactionManagerInformationLength) PVOID TransactionManagerInformation,
@@ -87,6 +145,16 @@ NtSetInformationTransactionManager(
     _In_reads_bytes_(TransactionManagerInformationLength) PVOID TransactionManagerInformation,
     _In_ ULONG TransactionManagerInformationLength
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwSetInformationTransactionManager(
+    _In_opt_ HANDLE TmHandle,
+    _In_ TRANSACTIONMANAGER_INFORMATION_CLASS TransactionManagerInformationClass,
+    _In_reads_bytes_(TransactionManagerInformationLength) PVOID TransactionManagerInformation,
+    _In_ ULONG TransactionManagerInformationLength
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -94,6 +162,17 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtEnumerateTransactionObject(
+    _In_opt_ HANDLE RootObjectHandle,
+    _In_ KTMOBJECT_TYPE QueryType,
+    _Inout_updates_bytes_(ObjectCursorLength) PKTMOBJECT_CURSOR ObjectCursor,
+    _In_ ULONG ObjectCursorLength,
+    _Out_ PULONG ReturnLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwEnumerateTransactionObject(
     _In_opt_ HANDLE RootObjectHandle,
     _In_ KTMOBJECT_TYPE QueryType,
     _Inout_updates_bytes_(ObjectCursorLength) PKTMOBJECT_CURSOR ObjectCursor,
@@ -118,6 +197,22 @@ NtCreateTransaction(
     _In_opt_ PLARGE_INTEGER Timeout,
     _In_opt_ PUNICODE_STRING Description
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwCreateTransaction(
+    _Out_ PHANDLE TransactionHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_opt_ LPGUID Uow,
+    _In_opt_ HANDLE TmHandle,
+    _In_opt_ ULONG CreateOptions,
+    _In_opt_ ULONG IsolationLevel,
+    _In_opt_ ULONG IsolationFlags,
+    _In_opt_ PLARGE_INTEGER Timeout,
+    _In_opt_ PUNICODE_STRING Description
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -125,6 +220,17 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtOpenTransaction(
+    _Out_ PHANDLE TransactionHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ LPGUID Uow,
+    _In_opt_ HANDLE TmHandle
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwOpenTransaction(
     _Out_ PHANDLE TransactionHandle,
     _In_ ACCESS_MASK DesiredAccess,
     _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
@@ -144,6 +250,17 @@ NtQueryInformationTransaction(
     _In_ ULONG TransactionInformationLength,
     _Out_opt_ PULONG ReturnLength
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwQueryInformationTransaction(
+    _In_ HANDLE TransactionHandle,
+    _In_ TRANSACTION_INFORMATION_CLASS TransactionInformationClass,
+    _Out_writes_bytes_(TransactionInformationLength) PVOID TransactionInformation,
+    _In_ ULONG TransactionInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -151,6 +268,16 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtSetInformationTransaction(
+    _In_ HANDLE TransactionHandle,
+    _In_ TRANSACTION_INFORMATION_CLASS TransactionInformationClass,
+    _In_reads_bytes_(TransactionInformationLength) PVOID TransactionInformation,
+    _In_ ULONG TransactionInformationLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwSetInformationTransaction(
     _In_ HANDLE TransactionHandle,
     _In_ TRANSACTION_INFORMATION_CLASS TransactionInformationClass,
     _In_reads_bytes_(TransactionInformationLength) PVOID TransactionInformation,
@@ -166,6 +293,14 @@ NtCommitTransaction(
     _In_ HANDLE TransactionHandle,
     _In_ BOOLEAN Wait
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwCommitTransaction(
+    _In_ HANDLE TransactionHandle,
+    _In_ BOOLEAN Wait
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -176,6 +311,14 @@ NtRollbackTransaction(
     _In_ HANDLE TransactionHandle,
     _In_ BOOLEAN Wait
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwRollbackTransaction(
+    _In_ HANDLE TransactionHandle,
+    _In_ BOOLEAN Wait
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -183,6 +326,20 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtCreateEnlistment(
+    _Out_ PHANDLE EnlistmentHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ HANDLE ResourceManagerHandle,
+    _In_ HANDLE TransactionHandle,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_opt_ ULONG CreateOptions,
+    _In_ NOTIFICATION_MASK NotificationMask,
+    _In_opt_ PVOID EnlistmentKey
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwCreateEnlistment(
     _Out_ PHANDLE EnlistmentHandle,
     _In_ ACCESS_MASK DesiredAccess,
     _In_ HANDLE ResourceManagerHandle,
@@ -205,6 +362,17 @@ NtOpenEnlistment(
     _In_ LPGUID EnlistmentGuid,
     _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwOpenEnlistment(
+    _Out_ PHANDLE EnlistmentHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ HANDLE ResourceManagerHandle,
+    _In_ LPGUID EnlistmentGuid,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -212,6 +380,17 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtQueryInformationEnlistment(
+    _In_ HANDLE EnlistmentHandle,
+    _In_ ENLISTMENT_INFORMATION_CLASS EnlistmentInformationClass,
+    _Out_writes_bytes_(EnlistmentInformationLength) PVOID EnlistmentInformation,
+    _In_ ULONG EnlistmentInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwQueryInformationEnlistment(
     _In_ HANDLE EnlistmentHandle,
     _In_ ENLISTMENT_INFORMATION_CLASS EnlistmentInformationClass,
     _Out_writes_bytes_(EnlistmentInformationLength) PVOID EnlistmentInformation,
@@ -230,6 +409,16 @@ NtSetInformationEnlistment(
     _In_reads_bytes_(EnlistmentInformationLength) PVOID EnlistmentInformation,
     _In_ ULONG EnlistmentInformationLength
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwSetInformationEnlistment(
+    _In_opt_ HANDLE EnlistmentHandle,
+    _In_ ENLISTMENT_INFORMATION_CLASS EnlistmentInformationClass,
+    _In_reads_bytes_(EnlistmentInformationLength) PVOID EnlistmentInformation,
+    _In_ ULONG EnlistmentInformationLength
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -237,6 +426,14 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtRecoverEnlistment(
+    _In_ HANDLE EnlistmentHandle,
+    _In_opt_ PVOID EnlistmentKey
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwRecoverEnlistment(
     _In_ HANDLE EnlistmentHandle,
     _In_opt_ PVOID EnlistmentKey
     );
@@ -250,6 +447,14 @@ NtPrePrepareEnlistment(
     _In_ HANDLE EnlistmentHandle,
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwPrePrepareEnlistment(
+    _In_ HANDLE EnlistmentHandle,
+    _In_opt_ PLARGE_INTEGER TmVirtualClock
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -257,6 +462,14 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtPrepareEnlistment(
+    _In_ HANDLE EnlistmentHandle,
+    _In_opt_ PLARGE_INTEGER TmVirtualClock
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwPrepareEnlistment(
     _In_ HANDLE EnlistmentHandle,
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
@@ -270,6 +483,14 @@ NtCommitEnlistment(
     _In_ HANDLE EnlistmentHandle,
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwCommitEnlistment(
+    _In_ HANDLE EnlistmentHandle,
+    _In_opt_ PLARGE_INTEGER TmVirtualClock
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -277,6 +498,14 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtRollbackEnlistment(
+    _In_ HANDLE EnlistmentHandle,
+    _In_opt_ PLARGE_INTEGER TmVirtualClock
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwRollbackEnlistment(
     _In_ HANDLE EnlistmentHandle,
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
@@ -290,6 +519,14 @@ NtPrePrepareComplete(
     _In_ HANDLE EnlistmentHandle,
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwPrePrepareComplete(
+    _In_ HANDLE EnlistmentHandle,
+    _In_opt_ PLARGE_INTEGER TmVirtualClock
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -297,6 +534,14 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtPrepareComplete(
+    _In_ HANDLE EnlistmentHandle,
+    _In_opt_ PLARGE_INTEGER TmVirtualClock
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwPrepareComplete(
     _In_ HANDLE EnlistmentHandle,
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
@@ -310,6 +555,14 @@ NtCommitComplete(
     _In_ HANDLE EnlistmentHandle,
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwCommitComplete(
+    _In_ HANDLE EnlistmentHandle,
+    _In_opt_ PLARGE_INTEGER TmVirtualClock
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -317,6 +570,14 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtReadOnlyEnlistment(
+    _In_ HANDLE EnlistmentHandle,
+    _In_opt_ PLARGE_INTEGER TmVirtualClock
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwReadOnlyEnlistment(
     _In_ HANDLE EnlistmentHandle,
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
@@ -330,6 +591,14 @@ NtRollbackComplete(
     _In_ HANDLE EnlistmentHandle,
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwRollbackComplete(
+    _In_ HANDLE EnlistmentHandle,
+    _In_opt_ PLARGE_INTEGER TmVirtualClock
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -340,6 +609,14 @@ NtSinglePhaseReject(
     _In_ HANDLE EnlistmentHandle,
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwSinglePhaseReject(
+    _In_ HANDLE EnlistmentHandle,
+    _In_opt_ PLARGE_INTEGER TmVirtualClock
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -347,6 +624,19 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtCreateResourceManager(
+    _Out_ PHANDLE ResourceManagerHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ HANDLE TmHandle,
+    _In_ LPGUID RmGuid,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_opt_ ULONG CreateOptions,
+    _In_opt_ PUNICODE_STRING Description
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwCreateResourceManager(
     _Out_ PHANDLE ResourceManagerHandle,
     _In_ ACCESS_MASK DesiredAccess,
     _In_ HANDLE TmHandle,
@@ -368,6 +658,17 @@ NtOpenResourceManager(
     _In_opt_ LPGUID ResourceManagerGuid,
     _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwOpenResourceManager(
+    _Out_ PHANDLE ResourceManagerHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ HANDLE TmHandle,
+    _In_opt_ LPGUID ResourceManagerGuid,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -377,6 +678,13 @@ NTAPI
 NtRecoverResourceManager(
     _In_ HANDLE ResourceManagerHandle
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwRecoverResourceManager(
+    _In_ HANDLE ResourceManagerHandle
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -384,6 +692,19 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtGetNotificationResourceManager(
+    _In_ HANDLE ResourceManagerHandle,
+    _Out_ PTRANSACTION_NOTIFICATION TransactionNotification,
+    _In_ ULONG NotificationLength,
+    _In_opt_ PLARGE_INTEGER Timeout,
+    _Out_opt_ PULONG ReturnLength,
+    _In_ ULONG Asynchronous,
+    _In_opt_ ULONG_PTR AsynchronousContext
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwGetNotificationResourceManager(
     _In_ HANDLE ResourceManagerHandle,
     _Out_ PTRANSACTION_NOTIFICATION TransactionNotification,
     _In_ ULONG NotificationLength,
@@ -405,6 +726,17 @@ NtQueryInformationResourceManager(
     _In_ ULONG ResourceManagerInformationLength,
     _Out_opt_ PULONG ReturnLength
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwQueryInformationResourceManager(
+    _In_ HANDLE ResourceManagerHandle,
+    _In_ RESOURCEMANAGER_INFORMATION_CLASS ResourceManagerInformationClass,
+    _Out_writes_bytes_(ResourceManagerInformationLength) PVOID ResourceManagerInformation,
+    _In_ ULONG ResourceManagerInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -412,6 +744,16 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtSetInformationResourceManager(
+    _In_ HANDLE ResourceManagerHandle,
+    _In_ RESOURCEMANAGER_INFORMATION_CLASS ResourceManagerInformationClass,
+    _In_reads_bytes_(ResourceManagerInformationLength) PVOID ResourceManagerInformation,
+    _In_ ULONG ResourceManagerInformationLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwSetInformationResourceManager(
     _In_ HANDLE ResourceManagerHandle,
     _In_ RESOURCEMANAGER_INFORMATION_CLASS ResourceManagerInformationClass,
     _In_reads_bytes_(ResourceManagerInformationLength) PVOID ResourceManagerInformation,
@@ -430,6 +772,17 @@ NtRegisterProtocolAddressInformation(
     _In_ PVOID ProtocolInformation,
     _In_opt_ ULONG CreateOptions
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwRegisterProtocolAddressInformation(
+    _In_ HANDLE ResourceManager,
+    _In_ PCRM_PROTOCOL_ID ProtocolId,
+    _In_ ULONG ProtocolInformationSize,
+    _In_ PVOID ProtocolInformation,
+    _In_opt_ ULONG CreateOptions
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -437,6 +790,16 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtPropagationComplete(
+    _In_ HANDLE ResourceManagerHandle,
+    _In_ ULONG RequestCookie,
+    _In_ ULONG BufferLength,
+    _In_ PVOID Buffer
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwPropagationComplete(
     _In_ HANDLE ResourceManagerHandle,
     _In_ ULONG RequestCookie,
     _In_ ULONG BufferLength,
@@ -453,6 +816,15 @@ NtPropagationFailed(
     _In_ ULONG RequestCookie,
     _In_ NTSTATUS PropStatus
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwPropagationFailed(
+    _In_ HANDLE ResourceManagerHandle,
+    _In_ ULONG RequestCookie,
+    _In_ NTSTATUS PropStatus
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -464,6 +836,14 @@ NtFreezeTransactions(
     _In_ PLARGE_INTEGER FreezeTimeout,
     _In_ PLARGE_INTEGER ThawTimeout
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwFreezeTransactions(
+    _In_ PLARGE_INTEGER FreezeTimeout,
+    _In_ PLARGE_INTEGER ThawTimeout
+    );
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -472,6 +852,13 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtThawTransactions(
+    VOID
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwThawTransactions(
     VOID
     );
 #endif

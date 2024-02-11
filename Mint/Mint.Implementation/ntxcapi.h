@@ -58,6 +58,14 @@ NtContinue(
     _In_ BOOLEAN TestAlert
     );
 
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwContinue(
+    _In_ PCONTEXT ContextRecord,
+    _In_ BOOLEAN TestAlert
+    );
+
 #if (PHNT_VERSION >= PHNT_THRESHOLD)
 typedef enum _KCONTINUE_TYPE
 {
@@ -86,6 +94,14 @@ NtContinueEx(
     _In_ PVOID ContinueArgument // PKCONTINUE_ARGUMENT and BOOLEAN are valid
     );
 
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwContinueEx(
+    _In_ PCONTEXT ContextRecord,
+    _In_ PVOID ContinueArgument // PKCONTINUE_ARGUMENT and BOOLEAN are valid
+    );
+
 //FORCEINLINE
 //NTSTATUS
 //NtContinue(
@@ -101,6 +117,15 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtRaiseException(
+    _In_ PEXCEPTION_RECORD ExceptionRecord,
+    _In_ PCONTEXT ContextRecord,
+    _In_ BOOLEAN FirstChance
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwRaiseException(
     _In_ PEXCEPTION_RECORD ExceptionRecord,
     _In_ PCONTEXT ContextRecord,
     _In_ BOOLEAN FirstChance

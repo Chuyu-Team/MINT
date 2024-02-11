@@ -42,12 +42,30 @@ NtVdmControl(
     _Inout_ PVOID ServiceData
     );
 
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwVdmControl(
+    _In_ VDMSERVICECLASS Service,
+    _Inout_ PVOID ServiceData
+    );
+
 // WMI/ETW
 
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtTraceEvent(
+    _In_ HANDLE TraceHandle,
+    _In_ ULONG Flags,
+    _In_ ULONG FieldSize,
+    _In_ PVOID Fields
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwTraceEvent(
     _In_ HANDLE TraceHandle,
     _In_ ULONG Flags,
     _In_ ULONG FieldSize,
@@ -132,6 +150,18 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtTraceControl(
+    _In_ ETWTRACECONTROLCODE TraceControlCode,
+    _In_reads_bytes_opt_(InputBufferLength) PVOID InputBuffer,
+    _In_ ULONG InputBufferLength,
+    _Out_writes_bytes_opt_(OutputBufferLength) PVOID OutputBuffer,
+    _In_ ULONG OutputBufferLength,
+    _Out_ PULONG ReturnLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwTraceControl(
     _In_ ETWTRACECONTROLCODE TraceControlCode,
     _In_reads_bytes_opt_(InputBufferLength) PVOID InputBuffer,
     _In_ ULONG InputBufferLength,

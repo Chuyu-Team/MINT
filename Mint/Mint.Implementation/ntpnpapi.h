@@ -157,12 +157,31 @@ NtGetPlugPlayEvent(
     _Out_writes_bytes_(EventBufferSize) PPLUGPLAY_EVENT_BLOCK EventBlock,
     _In_ ULONG EventBufferSize
     );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwGetPlugPlayEvent(
+    _In_ HANDLE EventHandle,
+    _In_opt_ PVOID Context,
+    _Out_writes_bytes_(EventBufferSize) PPLUGPLAY_EVENT_BLOCK EventBlock,
+    _In_ ULONG EventBufferSize
+    );
 #endif
 
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtPlugPlayControl(
+    _In_ PLUGPLAY_CONTROL_CLASS PnPControlClass,
+    _Inout_updates_bytes_(PnPControlDataLength) PVOID PnPControlData,
+    _In_ ULONG PnPControlDataLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwPlugPlayControl(
     _In_ PLUGPLAY_CONTROL_CLASS PnPControlClass,
     _Inout_updates_bytes_(PnPControlDataLength) PVOID PnPControlData,
     _In_ ULONG PnPControlDataLength
@@ -180,7 +199,21 @@ NtSerializeBoot(
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
+ZwSerializeBoot(
+    VOID
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
 NtEnableLastKnownGood(
+    VOID
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwEnableLastKnownGood(
     VOID
     );
 
@@ -191,6 +224,13 @@ NtDisableLastKnownGood(
     VOID
     );
 
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwDisableLastKnownGood(
+    VOID
+    );
+
 #endif
 
 #if (PHNT_VERSION >= PHNT_VISTA)
@@ -198,6 +238,15 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtReplacePartitionUnit(
+    _In_ PUNICODE_STRING TargetInstancePath,
+    _In_ PUNICODE_STRING SpareInstancePath,
+    _In_ ULONG Flags
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwReplacePartitionUnit(
     _In_ PUNICODE_STRING TargetInstancePath,
     _In_ PUNICODE_STRING SpareInstancePath,
     _In_ ULONG Flags

@@ -137,7 +137,28 @@ NtQueryObject(
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
+ZwQueryObject(
+    _In_opt_ HANDLE Handle,
+    _In_ OBJECT_INFORMATION_CLASS ObjectInformationClass,
+    _Out_writes_bytes_opt_(ObjectInformationLength) PVOID ObjectInformation,
+    _In_ ULONG ObjectInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
 NtSetInformationObject(
+    _In_ HANDLE Handle,
+    _In_ OBJECT_INFORMATION_CLASS ObjectInformationClass,
+    _In_reads_bytes_(ObjectInformationLength) PVOID ObjectInformation,
+    _In_ ULONG ObjectInformationLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwSetInformationObject(
     _In_ HANDLE Handle,
     _In_ OBJECT_INFORMATION_CLASS ObjectInformationClass,
     _In_reads_bytes_(ObjectInformationLength) PVOID ObjectInformation,
@@ -164,7 +185,27 @@ NtDuplicateObject(
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
+ZwDuplicateObject(
+    _In_ HANDLE SourceProcessHandle,
+    _In_ HANDLE SourceHandle,
+    _In_opt_ HANDLE TargetProcessHandle,
+    _Out_opt_ PHANDLE TargetHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ ULONG HandleAttributes,
+    _In_ ULONG Options
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
 NtMakeTemporaryObject(
+    _In_ HANDLE Handle
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwMakeTemporaryObject(
     _In_ HANDLE Handle
     );
 
@@ -178,7 +219,24 @@ NtMakePermanentObject(
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
+ZwMakePermanentObject(
+    _In_ HANDLE Handle
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
 NtSignalAndWaitForSingleObject(
+    _In_ HANDLE SignalHandle,
+    _In_ HANDLE WaitHandle,
+    _In_ BOOLEAN Alertable,
+    _In_opt_ PLARGE_INTEGER Timeout
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwSignalAndWaitForSingleObject(
     _In_ HANDLE SignalHandle,
     _In_ HANDLE WaitHandle,
     _In_ BOOLEAN Alertable,
@@ -197,7 +255,27 @@ NtWaitForSingleObject(
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
+ZwWaitForSingleObject(
+    _In_ HANDLE Handle,
+    _In_ BOOLEAN Alertable,
+    _In_opt_ PLARGE_INTEGER Timeout
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
 NtWaitForMultipleObjects(
+    _In_ ULONG Count,
+    _In_reads_(Count) HANDLE Handles[],
+    _In_ WAIT_TYPE WaitType,
+    _In_ BOOLEAN Alertable,
+    _In_opt_ PLARGE_INTEGER Timeout
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwWaitForMultipleObjects(
     _In_ ULONG Count,
     _In_reads_(Count) HANDLE Handles[],
     _In_ WAIT_TYPE WaitType,
@@ -210,6 +288,17 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtWaitForMultipleObjects32(
+    _In_ ULONG Count,
+    _In_reads_(Count) LONG Handles[],
+    _In_ WAIT_TYPE WaitType,
+    _In_ BOOLEAN Alertable,
+    _In_opt_ PLARGE_INTEGER Timeout
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwWaitForMultipleObjects32(
     _In_ ULONG Count,
     _In_reads_(Count) LONG Handles[],
     _In_ WAIT_TYPE WaitType,
@@ -230,7 +319,27 @@ NtSetSecurityObject(
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
+ZwSetSecurityObject(
+    _In_ HANDLE Handle,
+    _In_ SECURITY_INFORMATION SecurityInformation,
+    _In_ PSECURITY_DESCRIPTOR SecurityDescriptor
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
 NtQuerySecurityObject(
+    _In_ HANDLE Handle,
+    _In_ SECURITY_INFORMATION SecurityInformation,
+    _Out_writes_bytes_opt_(Length) PSECURITY_DESCRIPTOR SecurityDescriptor,
+    _In_ ULONG Length,
+    _Out_ PULONG LengthNeeded
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwQuerySecurityObject(
     _In_ HANDLE Handle,
     _In_ SECURITY_INFORMATION SecurityInformation,
     _Out_writes_bytes_opt_(Length) PSECURITY_DESCRIPTOR SecurityDescriptor,
@@ -245,11 +354,26 @@ NtClose(
     _In_ _Post_ptr_invalid_ HANDLE Handle
     );
 
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwClose(
+    _In_ _Post_ptr_invalid_ HANDLE Handle
+    );
+
 #if (PHNT_VERSION >= PHNT_THRESHOLD)
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtCompareObjects(
+    _In_ HANDLE FirstObjectHandle,
+    _In_ HANDLE SecondObjectHandle
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwCompareObjects(
     _In_ HANDLE FirstObjectHandle,
     _In_ HANDLE SecondObjectHandle
     );
@@ -270,11 +394,31 @@ NtCreateDirectoryObject(
     _In_ POBJECT_ATTRIBUTES ObjectAttributes
     );
 
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwCreateDirectoryObject(
+    _Out_ PHANDLE DirectoryHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
+
 #if (PHNT_VERSION >= PHNT_WIN8)
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtCreateDirectoryObjectEx(
+    _Out_ PHANDLE DirectoryHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ HANDLE ShadowDirectoryHandle,
+    _In_ ULONG Flags
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwCreateDirectoryObjectEx(
     _Out_ PHANDLE DirectoryHandle,
     _In_ ACCESS_MASK DesiredAccess,
     _In_ POBJECT_ATTRIBUTES ObjectAttributes,
@@ -292,6 +436,15 @@ NtOpenDirectoryObject(
     _In_ POBJECT_ATTRIBUTES ObjectAttributes
     );
 
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwOpenDirectoryObject(
+    _Out_ PHANDLE DirectoryHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
+
 typedef struct _OBJECT_DIRECTORY_INFORMATION
 {
     UNICODE_STRING Name;
@@ -302,6 +455,19 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtQueryDirectoryObject(
+    _In_ HANDLE DirectoryHandle,
+    _Out_writes_bytes_opt_(Length) PVOID Buffer,
+    _In_ ULONG Length,
+    _In_ BOOLEAN ReturnSingleEntry,
+    _In_ BOOLEAN RestartScan,
+    _Inout_ PULONG Context,
+    _Out_opt_ PULONG ReturnLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwQueryDirectoryObject(
     _In_ HANDLE DirectoryHandle,
     _Out_writes_bytes_opt_(Length) PVOID Buffer,
     _In_ ULONG Length,
@@ -368,6 +534,16 @@ NtCreatePrivateNamespace(
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
+ZwCreatePrivateNamespace(
+    _Out_ PHANDLE NamespaceHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ POBJECT_BOUNDARY_DESCRIPTOR BoundaryDescriptor
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
 NtOpenPrivateNamespace(
     _Out_ PHANDLE NamespaceHandle,
     _In_ ACCESS_MASK DesiredAccess,
@@ -378,7 +554,24 @@ NtOpenPrivateNamespace(
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
+ZwOpenPrivateNamespace(
+    _Out_ PHANDLE NamespaceHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ POBJECT_BOUNDARY_DESCRIPTOR BoundaryDescriptor
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
 NtDeletePrivateNamespace(
+    _In_ HANDLE NamespaceHandle
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwDeletePrivateNamespace(
     _In_ HANDLE NamespaceHandle
     );
 
@@ -403,6 +596,16 @@ NtCreateSymbolicLinkObject(
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
+ZwCreateSymbolicLinkObject(
+    _Out_ PHANDLE LinkHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ PUNICODE_STRING LinkTarget
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
 NtOpenSymbolicLinkObject(
     _Out_ PHANDLE LinkHandle,
     _In_ ACCESS_MASK DesiredAccess,
@@ -412,7 +615,25 @@ NtOpenSymbolicLinkObject(
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
+ZwOpenSymbolicLinkObject(
+    _Out_ PHANDLE LinkHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
 NtQuerySymbolicLinkObject(
+    _In_ HANDLE LinkHandle,
+    _Inout_ PUNICODE_STRING LinkTarget,
+    _Out_opt_ PULONG ReturnedLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwQuerySymbolicLinkObject(
     _In_ HANDLE LinkHandle,
     _Inout_ PUNICODE_STRING LinkTarget,
     _Out_opt_ PULONG ReturnedLength
@@ -430,6 +651,16 @@ NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtSetInformationSymbolicLink(
+    _In_ HANDLE LinkHandle,
+    _In_ SYMBOLIC_LINK_INFO_CLASS SymbolicLinkInformationClass,
+    _In_reads_bytes_(SymbolicLinkInformationLength) PVOID SymbolicLinkInformation,
+    _In_ ULONG SymbolicLinkInformationLength
+    );
+
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+ZwSetInformationSymbolicLink(
     _In_ HANDLE LinkHandle,
     _In_ SYMBOLIC_LINK_INFO_CLASS SymbolicLinkInformationClass,
     _In_reads_bytes_(SymbolicLinkInformationLength) PVOID SymbolicLinkInformation,
