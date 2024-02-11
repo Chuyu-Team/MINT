@@ -5,40 +5,63 @@ namespace Mint.ZwGen
 {
     internal class Program
     {
+        private static readonly Regex NtApiRegex = new Regex(
+            @"NTSYSCALLAPI[\w\s_]*NTAPI\s*(Nt(\w)*)\(.*?\);",
+            RegexOptions.Compiled | RegexOptions.Singleline);
+
+        private static readonly Regex ZwApiRegex = new Regex(
+            @"NTSYSCALLAPI[\w\s_]*NTAPI\s*(Zw(\w)*)\(.*?\);",
+            RegexOptions.Compiled | RegexOptions.Singleline);
+
+        private static string RepositoryRoot = GitRepository.GetRootPath();
+
         static void Main(string[] args)
         {
-            string currentFilePath = GitRepository.GetRootPath() + @"\Tools\amalgamate\MINT.h";
+            DirectoryInfo Folder = new DirectoryInfo(
+                RepositoryRoot + @"\Mint\Mint.Implementation");
 
-            string text = File.ReadAllText(currentFilePath);
-
-            Regex regex = new Regex(
-                @"NTSYSCALLAPI[\w\s_]*NTAPI\s*(Nt(\w)*)\(.*?\);",
-                RegexOptions.Compiled | RegexOptions.Singleline);
-            MatchCollection matches;
-
-            matches = regex.Matches(text);
-
-            foreach (Match match in matches)
+            foreach (FileInfo FileItem in Folder.GetFiles())
             {
-                string currentName = match.Groups[1].Value;
-                string currentText = match.Value;
-                int currentNameIndex = match.Groups[1].Index - match.Index;
-
-                string newText = string.Format(
-                    "{0}\r\n\r\n{1}Zw{2}", 
-                    currentText, 
-                    currentText.Substring(0, currentNameIndex), 
-                    currentText.Substring(currentNameIndex + 2));
-                // Make sure we don't add definitions repeatedly.
-                if (text.IndexOf(newText) == -1)
+                if (FileItem.Extension.ToLower() != ".h")
                 {
-                    text = text.Replace(currentText, newText);
+                    continue;
                 }
+
+                string Content = File.ReadAllText(FileItem.FullName);
+
+                foreach (Match MatchItem in ZwApiRegex.Matches(Content))
+                {
+                    Content = Content.Replace(
+                        "\r\n\r\n" + MatchItem.Value,
+                        string.Empty);
+                }
+
+                foreach (Match MatchItem in NtApiRegex.Matches(Content))
+                {
+                    string CurrentName =
+                        MatchItem.Groups[1].Value;
+                    string CurrentText =
+                        MatchItem.Value;
+                    int CurrentNameIndex =
+                        MatchItem.Groups[1].Index - MatchItem.Index;
+
+                    string NewText = string.Format(
+                        "{0}\r\n\r\n{1}Zw{2}",
+                        CurrentText,
+                        CurrentText.Substring(0, CurrentNameIndex),
+                        CurrentText.Substring(CurrentNameIndex + 2));
+
+                    // Make sure we don't add definitions repeatedly.
+                    if (Content.IndexOf(NewText) == -1)
+                    {
+                        Content = Content.Replace(CurrentText, NewText);
+                    }
+                }
+
+                FileUtilities.SaveTextToFileAsUtf8Bom(FileItem.FullName, Content);
             }
-
-            FileUtilities.SaveTextToFileAsUtf8Bom(currentFilePath, text);
-
-            Console.WriteLine("Hello, World!");
+            
+            Console.WriteLine("Mint.ZwGen task has been completed.");
             Console.ReadKey();
         }
     }
