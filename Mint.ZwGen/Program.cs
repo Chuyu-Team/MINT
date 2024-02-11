@@ -36,15 +36,9 @@ namespace Mint.ZwGen
                 }
             }
 
-            string outputFile = File.ReadAllText(
-                System.AppDomain.CurrentDomain.BaseDirectory + "\\FileTemplate.txt",
-                System.Text.Encoding.UTF8);
-
-            outputFile = outputFile.Replace("{FILE_CONTENT}", text);
-
             File.WriteAllText(
-                currentFilePath, 
-                outputFile,
+                currentFilePath,
+                text,
                 System.Text.Encoding.UTF8);
 
             Console.WriteLine("Hello, World!");
