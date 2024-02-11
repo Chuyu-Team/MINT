@@ -36,10 +36,7 @@ namespace Mint.ZwGen
                 }
             }
 
-            File.WriteAllText(
-                currentFilePath,
-                text,
-                System.Text.Encoding.UTF8);
+            FileUtilities.SaveTextToFileAsUtf8Bom(currentFilePath, text);
 
             Console.WriteLine("Hello, World!");
             Console.ReadKey();
