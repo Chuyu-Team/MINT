@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mile.Project.Helpers" Version="1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="FileTemplate.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
