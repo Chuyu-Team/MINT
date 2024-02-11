@@ -11,7 +11,6 @@ project is based on PHNT from [System Informer (originally Process Hacker)].
 ## The difference from PHNT from [System Informer (originally Process Hacker)]
 
 - Compiling using the `/W4 /WX` option is supported.
-- No private definition from the PHNT from [System Informer (originally Process Hacker)].
 - Optimized for the Windows SDK.
 - "Zw*" API is under the management of Windows SDK version macros.
 
