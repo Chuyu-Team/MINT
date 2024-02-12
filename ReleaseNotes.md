@@ -1,5 +1,18 @@
 ﻿# Mile.Aria2 Release Notes
 
+**MINT 2024.0**
+
+- Use PHNT from System Informer (originally Process Hacker) instead of two years
+  ago standalone version, and we can use the MIT License without issues.
+- No longer use amalgamated header mode but keep header only mode for improve 
+  the upstream synchronization experience.
+- Start containing the kernel mode definitions.
+- Start private definition from the PHNT.
+- Rewrite the ZwGen tool to improve the maintenance experience.
+- Add NuGet packaging support.
+- Use Mile.Project.Windows to manage the maintainer tools.
+- Update email address for source code.
+
 **MINT 2023.0**
 
 - Initial release.
