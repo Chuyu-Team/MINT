@@ -1,4 +1,4 @@
-﻿# Mile.Aria2 Release Notes
+﻿# MINT Release Notes
 
 **MINT 2024.0**
 
