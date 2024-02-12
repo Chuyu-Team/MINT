@@ -4,7 +4,7 @@
 
 - Use PHNT from System Informer (originally Process Hacker) instead of two years
   ago standalone version, and we can use the MIT License without issues.
-- No longer use amalgamated header mode but keep header only mode for improve 
+- No longer use amalgamated header mode but keep header-only mode to improve 
   the upstream synchronization experience.
 - Start containing the kernel mode definitions.
 - Start private definition from the PHNT.
