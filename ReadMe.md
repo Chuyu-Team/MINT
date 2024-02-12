@@ -1,5 +1,9 @@
 ﻿# Mouri's Internal NT API Collections (MINT)
 
+![Total Downloads](https://img.shields.io/github/downloads/Chuyu-Team/MINT/total)
+[![GitHub Releases](https://img.shields.io/github/v/release/Chuyu-Team/MINT?include_prereleases)](https://github.com/Chuyu-Team/MINT/releases)
+[![NuGet Package](https://img.shields.io/nuget/vpre/Chuyu.Mint)](https://www.nuget.org/packages/Chuyu.Mint)
+
 - [简体中文](自述.md)
 
 Mouri's Internal NT API Collections (MINT) was originally called NativeLib or 
