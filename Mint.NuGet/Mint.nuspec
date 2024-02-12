@@ -23,12 +23,13 @@
   </metadata>
   <files>
   
-    <file src="..\Mint\**\*.*" target="Source\Native" />
+    <file src="..\Mint\**\*.*" target="Source\Native"/>
 
     <file src="Mint.props" target="build\native"/>
 
     <file src="..\ReadMe.md" target="."/>
     <file src="..\License.md" target="."/>
+    <file src="..\ReleaseNotes.md" target="."/>
 
   </files>
 </package>
