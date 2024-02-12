@@ -36,4 +36,10 @@ distributed under the MIT License now and I'm glad to follow that.
 
 [System Informer (originally Process Hacker)]: https://github.com/winsiderss/systeminformer
 
+## Documents
+
+- [License](License.md)
+- [Release Notes](ReleaseNotes.md)
+- [Versioning](Versioning.md)
+
 ## Chuyu Team
