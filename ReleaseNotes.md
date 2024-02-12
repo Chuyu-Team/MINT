@@ -1,5 +1,11 @@
 ﻿# MINT Release Notes
 
+**MINT 2024.1**
+
+- Update PHNT from System Informer to
+  https://github.com/winsiderss/systeminformer/tree/433baa1d8156efc426d5e7257ff8fc8dea0cbc92.
+- Update documents.
+
 **MINT 2024.0**
 
 - Use PHNT from System Informer (originally Process Hacker) instead of two years
