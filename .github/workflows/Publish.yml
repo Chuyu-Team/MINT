@@ -1,0 +1,25 @@
+﻿name: Publish
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      POWERSHELL_TELEMETRY_OPTOUT: 1
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+    - uses: microsoft/setup-msbuild@v2
+    - name: Clear local NuGet cache (workaround for failed restores on windows-latest)
+      run: dotnet nuget locals all --clear
+    - name: Build
+      run: msbuild BuildAllTargets.proj
+    - name: Publish to NuGet
+      if: contains(github.ref, 'tags/')
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      shell: cmd
+      run: |
+         :: 把生成的nuget包发布到nuget中
+         nuget push Output\MINT.nupkg -ApiKey ${{ secrets.NUGET_TOKEN }} -Source https://api.nuget.org/v3/index.json
