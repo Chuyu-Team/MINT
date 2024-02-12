@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
   PROJECT:   Mouri's Internal NT API Collections (MINT)
-  FILE:      Mint.nuspec
+  FILE:      Chuyu.Mint.nuspec
   PURPOSE:   NuGet package definition for MINT
 
   LICENSE:   The MIT License
@@ -25,7 +25,7 @@
   
     <file src="..\Mint\**\*.*" target="Source\Native"/>
 
-    <file src="Mint.props" target="build\native"/>
+    <file src="Chuyu.Mint.props" target="build\native"/>
 
     <file src="..\ReadMe.md" target="."/>
     <file src="..\License.md" target="."/>

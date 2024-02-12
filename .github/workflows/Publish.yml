@@ -22,4 +22,4 @@ jobs:
       shell: cmd
       run: |
          :: 把生成的nuget包发布到nuget中
-         nuget push Output\MINT.nupkg -ApiKey ${{ secrets.NUGET_TOKEN }} -Source https://api.nuget.org/v3/index.json
+         nuget push Output\Chuyu.Mint.nupkg -ApiKey ${{ secrets.NUGET_TOKEN }} -Source https://api.nuget.org/v3/index.json

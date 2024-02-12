@@ -7,6 +7,6 @@
       Projects="$(MSBuildThisFileDirectory)Mile.Project.Windows\Mile.Project.NuGetPackaging.proj"
       Targets="Restore;Build"
       StopOnFirstFailure="True"
-      Properties="PreferredToolArchitecture=x64;NuspecFile=$(MSBuildThisFileDirectory)Mint.NuGet\Mint.nuspec" />
+      Properties="PreferredToolArchitecture=x64;NuspecFile=$(MSBuildThisFileDirectory)Mint.NuGet\Chuyu.Mint.nuspec" />
   </Target>
 </Project>
