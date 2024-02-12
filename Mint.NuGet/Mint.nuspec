@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  PROJECT:   Mouri's Internal NT API Collections (MINT)
+  FILE:      Mint.nuspec
+  PURPOSE:   NuGet package definition for MINT
+
+  LICENSE:   The MIT License
+
+  MAINTAINER: MouriNaruto (Kenji.Mouri@outlook.com)
+-->
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>MINT</id>
+    <version>2024.0.0</version>
+    <description>Contains the definitions for the Windows Internal UserMode API from ntdll.dll, samlib.dll and winsta.dll</description>
+    <authors>Kenji Mouri</authors>
+    <owners>初雨团队</owners>
+    <projectUrl>https://github.com/Chuyu-Team/MINT</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="file">License.md</license>
+    <readme>ReadMe.md</readme>
+    <repository type="git" url="https://github.com/Chuyu-Team/MINT.git" />
+  </metadata>
+  <files>
+  
+    <file src="..\Mint\**\*.*" target="Source\Native" />
+
+    <file src="Mint.props" target="build\native"/>
+
+    <file src="..\ReadMe.md" target="."/>
+    <file src="..\License.md" target="."/>
+
+  </files>
+</package>

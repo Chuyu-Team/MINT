@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  PROJECT:   Mouri's Internal NT API Collections (MINT)
+  FILE:      Mint.props
+  PURPOSE:   MSBuild props file for MINT
+
+  LICENSE:   The MIT License
+
+  MAINTAINER: MouriNaruto (Kenji.Mouri@outlook.com)
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <IncludePath>$(MSBuildThisFileDirectory)..\..\Source\Native\;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+</Project>
