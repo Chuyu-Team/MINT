@@ -9,8 +9,10 @@
 
 #include <pshpack4.h>
 
-#ifndef IMAGE_FILE_MACHINE_CHPE_X86
-#define IMAGE_FILE_MACHINE_CHPE_X86 0x3A64
+#if (PHNT_MODE != PHNT_MODE_KERNEL)
+#define IMAGE_FILE_MACHINE_CHPE_X86          0x3A64
+#define IMAGE_FILE_MACHINE_ARM64EC           0xA641
+#define IMAGE_FILE_MACHINE_ARM64X            0xA64E
 #endif
 
 typedef struct _IMAGE_DEBUG_POGO_ENTRY
@@ -88,6 +90,27 @@ typedef struct _IMAGE_ARM64EC_METADATA
     ULONG __os_arm64x_dispatch_fptr;
     ULONG AuxiliaryIATCopy;
 } IMAGE_ARM64EC_METADATA, *PIMAGE_ARM64EC_METADATA;
+
+// rev
+#define IMAGE_ARM64EC_CODE_MAP_TYPE_ARM64   0
+#define IMAGE_ARM64EC_CODE_MAP_TYPE_ARM64EC 1
+#define IMAGE_ARM64EC_CODE_MAP_TYPE_AMD64   2
+
+// rev
+typedef struct _IMAGE_ARM64EC_CODE_MAP_ENTRY
+{
+    union
+    {
+        ULONG StartOffset;
+        struct
+        {
+            ULONG Type : 2;
+            ULONG AddressBits : 30;
+        } DUMMYSTRUCTNAME;
+    } DUMMYUNIONNAME;
+
+    ULONG Length;
+} IMAGE_ARM64EC_CODE_MAP_ENTRY, *PIMAGE_ARM64EC_CODE_MAP_ENTRY;
 
 typedef struct _IMAGE_ARM64EC_REDIRECTION_ENTRY
 {
