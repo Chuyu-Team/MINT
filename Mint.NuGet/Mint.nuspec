@@ -10,7 +10,7 @@
 -->
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>MINT</id>
+    <id>Chuyu.Mint</id>
     <version>2024.0.0</version>
     <description>Contains the definitions for the Windows Internal UserMode API from ntdll.dll, samlib.dll and winsta.dll</description>
     <authors>Kenji Mouri</authors>
